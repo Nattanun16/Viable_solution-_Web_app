@@ -1,0 +1,612 @@
+﻿[
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2026-05-16T09:04:31.880Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "1",
+        "object_repr": "[เธฃเธญเธ”เธณเน€เธเธดเธเธเธฒเธฃ] เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2026-05-16T09:07:45.297Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "2",
+        "object_repr": "[เธฃเธญเธ”เธณเน€เธเธดเธเธเธฒเธฃ] เธเนเธญเธ•เธเธดเธฅเธฅเธฒ เธ–เธฅเนเธกเธ•เธถเธ MHMK",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2026-05-16T09:11:38.741Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "3",
+        "object_repr": "[เธฃเธญเธ”เธณเน€เธเธดเธเธเธฒเธฃ] เธงเธฒเธฌเนเธเธชเธฃเธฐเธซเธเนเธฒเธ•เธถเธเธเธดเธชเธดเธเธชเน เนเธกเนเธกเธตเนเธเธญเธเธธเธเธฒเธ•",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2026-05-16T09:13:07.043Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "1",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เธเนเธญเธ•เธเธดเธฅเธฅเธฒ เธ–เธฅเนเธกเธ•เธถเธ MHMK...",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2026-05-16T09:14:26.412Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "2",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เธงเธฒเธฌเนเธเธชเธฃเธฐเธซเธเนเธฒเธ•เธถเธเธเธดเธชเธดเธเธชเน เนเธกเนเธกเธตเนเธ...",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2026-05-16T09:15:56.640Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "3",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12...",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2026-05-16T09:16:17.360Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "2",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เธงเธฒเธฌเนเธเธชเธฃเธฐเธซเธเนเธฒเธ•เธถเธเธเธดเธชเธดเธเธชเน เนเธกเนเธกเธตเนเธ...",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0e04\\u0e30\\u0e41\\u0e19\\u0e19\\u0e42\\u0e2b\\u0e27\\u0e15\\u0e2a\\u0e19\\u0e31\\u0e1a\\u0e2a\\u0e19\\u0e38\\u0e19\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2026-05-16T09:16:36.484Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "3",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12...",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2026-05-16T09:16:47.493Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "3",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12...",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0e04\\u0e30\\u0e41\\u0e19\\u0e19\\u0e42\\u0e2b\\u0e27\\u0e15\\u0e2a\\u0e19\\u0e31\\u0e1a\\u0e2a\\u0e19\\u0e38\\u0e19\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2026-05-16T09:17:10.839Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "3",
+        "object_repr": "[เธเธณเธฅเธฑเธเธ”เธณเน€เธเธดเธเธเธฒเธฃเนเธเนเนเธ] เธงเธฒเธฌเนเธเธชเธฃเธฐเธซเธเนเธฒเธ•เธถเธเธเธดเธชเธดเธเธชเน เนเธกเนเธกเธตเนเธเธญเธเธธเธเธฒเธ•",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0e2a\\u0e16\\u0e32\\u0e19\\u0e30\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2026-05-16T09:17:10.843Z",
+        "user": 1,
+        "content_type": 8,
+        "object_id": "1",
+        "object_repr": "[เนเธเนเนเธเน€เธชเธฃเนเธเธชเธดเนเธเนเธฅเนเธง] เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"\\u0e2a\\u0e16\\u0e32\\u0e19\\u0e30\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2026-05-16T09:17:53.386Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "4",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12...",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2026-05-16T09:18:12.942Z",
+        "user": 1,
+        "content_type": 7,
+        "object_id": "4",
+        "object_repr": "เธเนเธญเน€เธชเธเธญเนเธเธฐเธชเธณเธซเธฃเธฑเธ: เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12...",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": 1,
+        "codename": "add_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": 1,
+        "codename": "change_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": 1,
+        "codename": "delete_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": 1,
+        "codename": "view_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+        "name": "Can add permission",
+        "content_type": 2,
+        "codename": "add_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+        "name": "Can change permission",
+        "content_type": 2,
+        "codename": "change_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": 2,
+        "codename": "delete_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+        "name": "Can view permission",
+        "content_type": 2,
+        "codename": "view_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+        "name": "Can add group",
+        "content_type": 3,
+        "codename": "add_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+        "name": "Can change group",
+        "content_type": 3,
+        "codename": "change_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+        "name": "Can delete group",
+        "content_type": 3,
+        "codename": "delete_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+        "name": "Can view group",
+        "content_type": 3,
+        "codename": "view_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+        "name": "Can add user",
+        "content_type": 4,
+        "codename": "add_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+        "name": "Can change user",
+        "content_type": 4,
+        "codename": "change_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+        "name": "Can delete user",
+        "content_type": 4,
+        "codename": "delete_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+        "name": "Can view user",
+        "content_type": 4,
+        "codename": "view_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+        "name": "Can add content type",
+        "content_type": 5,
+        "codename": "add_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+        "name": "Can change content type",
+        "content_type": 5,
+        "codename": "change_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": 5,
+        "codename": "delete_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+        "name": "Can view content type",
+        "content_type": 5,
+        "codename": "view_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+        "name": "Can add session",
+        "content_type": 6,
+        "codename": "add_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+        "name": "Can change session",
+        "content_type": 6,
+        "codename": "change_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+        "name": "Can delete session",
+        "content_type": 6,
+        "codename": "delete_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+        "name": "Can view session",
+        "content_type": 6,
+        "codename": "view_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+        "name": "Can add เธเธฑเธเธซเธฒเธ—เธตเนเธฃเนเธญเธเน€เธฃเธตเธขเธ",
+        "content_type": 7,
+        "codename": "add_problem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+        "name": "Can change เธเธฑเธเธซเธฒเธ—เธตเนเธฃเนเธญเธเน€เธฃเธตเธขเธ",
+        "content_type": 7,
+        "codename": "change_problem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+        "name": "Can delete เธเธฑเธเธซเธฒเธ—เธตเนเธฃเนเธญเธเน€เธฃเธตเธขเธ",
+        "content_type": 7,
+        "codename": "delete_problem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+        "name": "Can view เธเธฑเธเธซเธฒเธ—เธตเนเธฃเนเธญเธเน€เธฃเธตเธขเธ",
+        "content_type": 7,
+        "codename": "view_problem"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+        "name": "Can add เธเนเธญเน€เธชเธเธญเนเธเธฐเธเธฒเธเธเธฃเธฐเธเธฒเธเธ",
+        "content_type": 8,
+        "codename": "add_suggestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+        "name": "Can change เธเนเธญเน€เธชเธเธญเนเธเธฐเธเธฒเธเธเธฃเธฐเธเธฒเธเธ",
+        "content_type": 8,
+        "codename": "change_suggestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+        "name": "Can delete เธเนเธญเน€เธชเธเธญเนเธเธฐเธเธฒเธเธเธฃเธฐเธเธฒเธเธ",
+        "content_type": 8,
+        "codename": "delete_suggestion"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+        "name": "Can view เธเนเธญเน€เธชเธเธญเนเธเธฐเธเธฒเธเธเธฃเธฐเธเธฒเธเธ",
+        "content_type": 8,
+        "codename": "view_suggestion"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$600000$LaGC6LG2FNm1dJ7s4vyqK3$YUb83EdOkrFPEGPvC6NtOIjhqugpDQf2dlI/5uYsoj4=",
+        "last_login": "2026-05-17T04:54:48.972Z",
+        "is_superuser": true,
+        "username": "bobby",
+        "first_name": "",
+        "last_name": "",
+        "email": "bobby888@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-05-16T09:02:21.466Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+        "app_label": "auth",
+        "model": "user"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+        "app_label": "viable_graph_app",
+        "model": "problem"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+        "app_label": "viable_graph_app",
+        "model": "suggestion"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "poytfe69vy6pd7lroftbko2spyf4pr6e",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCmBQou3XsGMgyDVA0kpV0Z765NutDtf-_9lwi4rSVsnZcwJ3EWIE6_W0R6cN1BumO9NUmtrssc5a7Ig3Z5bYmfl8P9OyjYy7fWI2ttJ7QuA2WMytsUTTagiDyBGrU2jlUEnzhP3kXt0YIxw-CcIWTx_gDe_jes:1wOTWa:VV0ygoZl-VQNTT-Ev-ALH0FQMfH4f-bqNIdwxmAWEq0",
+        "expire_date": "2026-05-31T04:54:48.976Z"
+    }
+},
+{
+    "model": "viable_graph_app.problem",
+    "pk": 1,
+    "fields": {
+        "title": "เนเธเธ—เธฒเธเธ”เธฑเธเธกเธทเธ”เธกเธฒเธ เธเธญเธขเธเธธเธฌเธฒเธฏ 12",
+        "category": "LIGHTS",
+        "description": "เธ”เธฑเธเธกเธฒ 3 เธงเธฑเธเนเธฅเนเธง เน€เธ”เธดเธเธเธฅเธฑเธเธซเธญเธ•เธญเธเธเธฅเธฒเธเธเธทเธเธญเธฑเธเธ•เธฃเธฒเธขเธกเธฒเธเธเธฃเธฑเธ",
+        "status": "COMPLETED",
+        "created_at": "2026-05-16T09:04:31.874Z"
+    }
+},
+{
+    "model": "viable_graph_app.problem",
+    "pk": 2,
+    "fields": {
+        "title": "เธเนเธญเธ•เธเธดเธฅเธฅเธฒ เธ–เธฅเนเธกเธ•เธถเธ MHMK",
+        "category": "SAFETY",
+        "description": "เธ•เธญเธเธเธตเนเธเธเธเนเธญเธ•เธเธดเธฅเธฅเธฒเธ•เธฑเธงเน€เธ—เนเธฒเธ•เธถเธเนเธเธซเธขเธเธเธณเธฅเธฑเธเน€เธญเธฒเธซเธฑเธงเธ–เธนเธ•เธถเธ MHMK เธเธเธเธฐเธ–เธฅเนเธกเนเธฅเนเธง",
+        "status": "PENDING",
+        "created_at": "2026-05-16T09:07:45.291Z"
+    }
+},
+{
+    "model": "viable_graph_app.problem",
+    "pk": 3,
+    "fields": {
+        "title": "เธงเธฒเธฌเนเธเธชเธฃเธฐเธซเธเนเธฒเธ•เธถเธเธเธดเธชเธดเธเธชเน เนเธกเนเธกเธตเนเธเธญเธเธธเธเธฒเธ•",
+        "category": "WASTE",
+        "description": "เธเธเธเธฒเธฃเธฅเธฐเน€เธกเธดเธ”เน€เธฅเธตเนเธขเธเธงเธฒเธฌเธซเธฅเธฑเธเธเนเธญเธก เนเธเธชเธฃเธฐเธเนเธณ เธซเธเนเธฒเธ•เธถเธเธเธดเธชเธดเธเธชเนเน‘ เนเธ”เธขเธ—เธตเนเนเธกเนเธกเธตเธเธฒเธฃเนเธเนเธเนเธเธเธญเนเธเธญเธเธธเธเธฒเธ•",
+        "status": "PROGRESS",
+        "created_at": "2026-05-16T09:11:38.735Z"
+    }
+},
+{
+    "model": "viable_graph_app.suggestion",
+    "pk": 1,
+    "fields": {
+        "problem": 2,
+        "suggestion_text": "เน€เธฃเธฒเธเธงเธฃเนเธเธเธญเธเธงเธฒเธกเธเนเธงเธขเน€เธซเธฅเธทเธญเธเธฒเธเธญเธธเธฅเธ•เธฃเนเธฒเนเธกเธ เธ—เธตเนเธ”เธฒเธงเธเธฒเน€เธกเนเธ",
+        "votes": 111,
+        "created_at": "2026-05-16T09:13:07.038Z"
+    }
+},
+{
+    "model": "viable_graph_app.suggestion",
+    "pk": 2,
+    "fields": {
+        "problem": 3,
+        "suggestion_text": "เธฃเธตเธเนเธเธเธญเธขเธทเนเธเนเธเธญเธเธธเธเธฒเธ•เธ—เธตเนเธเธฃเธกเธเธฃเธฐเธกเธ เธเนเธญเธเธงเธฑเธเธ—เธตเน 23 เธเธฃเธเธเธฒเธเธก เธเธตเน",
+        "votes": 555,
+        "created_at": "2026-05-16T09:14:26.406Z"
+    }
+},
+{
+    "model": "viable_graph_app.suggestion",
+    "pk": 3,
+    "fields": {
+        "problem": 1,
+        "suggestion_text": "เน€เธฃเธฒเธเธงเธฃเธกเธตเธเธฒเธฃเธ•เธดเธ”เธ•เธฑเนเธเธเธฃเธฐเธญเธฒเธ—เธดเธ•เธขเนเธเธเธฒเธ”เน€เธ—เนเธฒเธฅเธนเธเธเธญเธฅเธ•เธฒเธกเธ—เธฒเธเน€เธ”เธดเธเธ—เธธเธเน 300 เน€เธกเธ•เธฃ เน€เธเธทเนเธญเธเธงเธฒเธกเธเธฅเธญเธ”เธ เธฑเธขเนเธเธเธฒเธฃเน€เธ”เธดเธเธ—เธฒเธเธ•เธญเธเธเธฅเธฒเธเธเธทเธ",
+        "votes": 99999,
+        "created_at": "2026-05-16T09:15:56.635Z"
+    }
+}
+]
