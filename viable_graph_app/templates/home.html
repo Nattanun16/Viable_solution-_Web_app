@@ -80,12 +80,13 @@
         /* ── DROPDOWN ── */
         .nav-item {
             position: relative;
+            padding-bottom: 8px;
         }
 
         .dropdown-menu-custom {
             display: none;
             position: absolute;
-            top: calc(100% + 10px);
+            top: 100%;
             left: 0;
             background: #1a2a6c;
             border: none;
@@ -93,6 +94,7 @@
             min-width: 200px;
             z-index: 200;
             overflow: hidden;
+            margin-top: 0;
         }
 
         .dropdown-menu-custom a {
@@ -103,6 +105,7 @@
             font-size: 0.92rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             transition: background 0.15s;
+            cursor: pointer;
         }
 
         .dropdown-menu-custom a:last-child {
@@ -374,63 +377,6 @@
             max-width: 260px;
         }
 
-        /* ── DROPDOWN ── */
-        .nav-item {
-            position: relative;
-        }
-
-        .dropdown-menu-custom {
-            display: none;
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
-            background: #1a2a5e;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 4px;
-            min-width: 200px;
-            overflow: hidden;
-            z-index: 200;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            animation: dropIn 0.18s ease both;
-        }
-
-        @keyframes dropIn {
-            from {
-                opacity: 0;
-                transform: translateY(-6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .nav-item:hover .dropdown-menu-custom,
-        .nav-item:focus-within .dropdown-menu-custom {
-            display: block;
-        }
-
-        .dropdown-menu-custom a {
-            display: block;
-            padding: 0.7rem 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.93rem;
-            font-weight: 400;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-            transition: background 0.15s;
-        }
-
-        .dropdown-menu-custom a:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-menu-custom a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
         /* ── CONTENT SECTIONS ── */
         .content-section {
             background: #0e0e18;
@@ -501,7 +447,7 @@
                 <a href="#about-us" onclick="smoothScroll(event,'about-us')">Purpose</a>
                 <div class="dropdown-menu-custom">
                     <a href="#about-us" onclick="smoothScroll(event,'about-us')">about us</a>
-                    <a href="{% url 'propose_solution' %}">purpose solution</a>
+                    <a href="{% url 'propose_solution' %}">propose solution</a>
                     <a href="{% url 'graph' %}">graph</a>
                 </div>
             </li>
@@ -542,6 +488,18 @@
         {% endfor %}
     </div>
     {% endif %}
+    <!-- ABOUT US -->
+    <section class="content-section" id="about-us">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-md-6">
+                    <h2>About Us</h2>
+                    <p>Our web application provides a platform for Chulalongkorn University students to report problems
+                        occurring within the university and to propose effective solutions.</p>
+
+                </div>
+            </div>
+    </section>
 
     <!-- STATS -->
     <section class="stats-section">
@@ -624,39 +582,7 @@
         </div>
     </section>
 
-    <!-- ABOUT US -->
-    <section class="content-section" id="about-us">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-md-6">
-                    <span class="section-icon">🏛️</span>
-                    <p class="section-tag">Who We Are</p>
-                    <h2>About Us</h2>
-                    <p>Viable Graph คือแพลตฟอร์ม CivicTech ที่เชื่อมโยงประชาชนกับภาครัฐ
-                        เพื่อสร้างชุมชนที่น่าอยู่อย่างโปร่งใสและมีส่วนร่วม
-                        พัฒนาโดยทีมนักศึกษาที่มุ่งมั่นแก้ปัญหาในชุมชนด้วยเทคโนโลยี</p>
-                </div>
-                <div class="col-md-6">
-                    <div class="glass-card" style="padding:2rem;">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;">
-                            <div
-                                style="text-align:center; padding:1rem; background:rgba(255,255,255,0.04); border-radius:12px;">
-                                <div style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:#60a5fa;">100%
-                                </div>
-                                <div style="font-size:0.8rem; color:rgba(255,255,255,0.45);">Open Source</div>
-                            </div>
-                            <div
-                                style="text-align:center; padding:1rem; background:rgba(255,255,255,0.04); border-radius:12px;">
-                                <div style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:#34d399;">Free
-                                </div>
-                                <div style="font-size:0.8rem; color:rgba(255,255,255,0.45);">ไม่มีค่าใช้จ่าย</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+
 
     <!-- PURPOSE SOLUTION -->
     <section class="content-section" id="purpose-solution">
