@@ -1,4 +1,5 @@
 import requests
+import random
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
@@ -8,6 +9,7 @@ from django.http import JsonResponse
 from django.db.models import Count
 from .models import Problem
 from django.conf import settings
+from django.core.mail import send_mail
 
 
 # 1. หน้าแรกปกติ (เรนเดอร์หน้า home.html)
@@ -103,6 +105,68 @@ def propose_solutions_2(request):
 
 
 def reset_pass(request):
+    if request.method == "POST":
+
+        # กรณีกด Resend OTP
+        if request.POST.get("resend") == "1":
+            otp = str(random.randint(100000, 999999))
+            request.session["reset_otp"] = otp
+            email = request.session.get("reset_email", "")
+            if email:
+                send_mail(
+                    subject="OTP รีเซ็ตรหัสผ่าน",
+                    message=f"รหัส OTP ของคุณคือ: {otp}",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[email],
+                )
+            return JsonResponse({"status": "sent"})
+
+        # กรณีกรอก Student ID เพื่อขอ OTP
+        student_id = request.POST.get("student_id", "").strip()
+        if student_id and not request.POST.get("otp"):
+            try:
+                user = User.objects.get(username=student_id)
+                otp = str(random.randint(100000, 999999))
+                request.session["reset_otp"] = otp
+                request.session["reset_user_id"] = user.id
+                request.session["reset_email"] = user.email
+                send_mail(
+                    subject="OTP รีเซ็ตรหัสผ่าน",
+                    message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[user.email],
+                )
+                messages.success(request, f"ส่ง OTP ไปที่อีเมลแล้ว")
+            except User.DoesNotExist:
+                messages.error(request, "ไม่พบ Student ID นี้ในระบบ")
+            return render(request, "reset_pass.html")
+
+        # กรณีกรอก OTP + รหัสผ่านใหม่
+        otp_input = request.POST.get("otp", "").strip()
+        new_password = request.POST.get("new_password", "")
+        session_otp = request.session.get("reset_otp", "")
+        user_id = request.session.get("reset_user_id")
+
+        if not otp_input or not new_password:
+            messages.error(request, "กรุณากรอก OTP และรหัสผ่านใหม่")
+            return render(request, "reset_pass.html")
+
+        if otp_input != session_otp:
+            messages.error(request, "OTP ไม่ถูกต้อง กรุณาลองใหม่")
+            return render(request, "reset_pass.html")
+
+        try:
+            user = User.objects.get(id=user_id)
+            user.set_password(new_password)
+            user.save()
+            # ล้าง session
+            del request.session["reset_otp"]
+            del request.session["reset_user_id"]
+            messages.success(request, "เปลี่ยนรหัสผ่านสำเร็จ กรุณาล็อกอินใหม่")
+            return redirect("login")
+        except User.DoesNotExist:
+            messages.error(request, "เกิดข้อผิดพลาด กรุณาลองใหม่")
+
     return render(request, "reset_pass.html")
 
 
