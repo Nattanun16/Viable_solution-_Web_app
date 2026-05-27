@@ -70,6 +70,31 @@
             transition: color 0.2s, text-decoration 0.2s;
         }
 
+        .profile-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .profile-link:hover,
+        .profile-link:focus-visible {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
+
+        .profile-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
         .nav-links a:hover,
         .nav-links a.active {
             color: #ffffff;
@@ -453,6 +478,14 @@
             </li>
 
             {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a href="{% url 'profile' %}" class="profile-link" aria-label="Profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5z"/>
+                        <path d="M4 20c0-3.31 2.69-6 6-6h4c3.31 0 6 2.69 6 6"/>
+                    </svg>
+                </a>
+            </li>
             <li class="nav-item"><a href="{% url 'logout' %}">Log Out</a></li>
             {% else %}
             <li class="nav-item"><a href="{% url 'login' %}">Log In</a></li>
@@ -503,9 +536,10 @@
 
                 </div>
             </div>
+        </div>
     </section>
 
-    <!-- STATS -->
+
     <section class="stats-section">
         <div class="container">
             <div class="row g-3 text-center">

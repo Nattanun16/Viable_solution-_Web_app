@@ -320,7 +320,7 @@ def login(request):
 
         if user is not None:
             auth_login(request, user)
-            return redirect("home")
+            return redirect("profile")
         else:
             messages.error(request, "Student ID หรือรหัสผ่านไม่ถูกต้อง")
             return render(request, "login.html", context)
