@@ -469,7 +469,7 @@
         <ul class="nav-links">
             <li class="nav-item"><a href="/" class="active">Home</a></li>
             <li class="nav-item">
-                <a href="#about-us" onclick="smoothScroll(event,'about-us')">Purpose</a>
+                <a href="#about-us" onclick="smoothScroll(event,'about-us')">Propose</a>
                 <div class="dropdown-menu-custom">
                     <a href="#about-us" onclick="smoothScroll(event,'about-us')">about us</a>
                     <a href="{% url 'propose_solution' %}">propose solution</a>
@@ -500,13 +500,17 @@
         <div class="hero-content">
             <h1 class="hero-title">Viable Graph</h1>
             <div class="search-wrap">
-                <form method="get" action="/" class="search-box">
+                {% if user.is_authenticated %}
+                <form method="get" action="{% url 'propose_solution' %}" class="search-box">
+                {% else %}
+                <form method="get" action="{% url 'login' %}" class="search-box">
+                {% endif %}
                     <input type="text" name="q" placeholder="Search for your problem here">
                     <button type="submit" aria-label="Search">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             stroke-width="2.2">
-                            <circle cx="11" cy="11" r="7" />
-                            <line x1="16.5" y1="16.5" x2="22" y2="22" />
+                        <circle cx="11" cy="11" r="7" />
+                        <line x1="16.5" y1="16.5" x2="22" y2="22" />
                         </svg>
                     </button>
                 </form>

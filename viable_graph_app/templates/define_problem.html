@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Define your Problems</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: #ffb3d9;
+        min-height: 100vh;
+        color: #1a1a1a;
+      }
+      
+      .page-wrap {
+        display: flex;
+        min-height: 100vh;
+      }
+      
+      /* ── LEFT PANEL ── */
+      .left-panel {
+        flex: 1;
+        background: #ffb3d9;
+        padding: 3rem 3rem 3rem 3.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        position: relative;
+      }
+      
+      .back-btn {
+        position: absolute;
+        left: 1.4rem;
+        top: 1.4rem;
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1.5px solid rgba(200, 100, 160, 0.3);
+        color: #c0187a;
+        font-size: 1.1rem;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.2s;
+      }
+      
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.95);
+        transform: translateX(-2px);
+      }
+      
+      .title-wrap {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+      
+      .title-define {
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 400;
+        color: #d4007a;
+      }
+      
+      .title-your {
+        font-weight: 400;
+        color: #1a1a1a;
+      }
+      .title-problems {
+        font-weight: 700;
+        color: #d4007a;
+      }
+      
+      .title-big {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 700;
+        line-height: 1;
+      }
+      
+      /* tabs on divider */
+      .tabs-col {
+        position: absolute;
+        right: -1px;
+        top: 62%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        z-index: 5;
+      }
+      
+      .tab-pill {
+        background: #f0c040;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 1rem 1.4rem;
+        border-radius: 20px 0 0 20px;
+        cursor: pointer;
+        text-align: center;
+        white-space: nowrap;
+        transition: background 0.2s;
+        line-height: 1.3;
+        min-width: 110px;
+      }
+      
+      .tab-pill.active,
+      .tab-pill:hover {
+        background: #d4a000;
+      }
+      
+      /* form fields */
+      .fields-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        flex: 1;
+      }
+      
+      .tab-fields {
+        display: none;
+        flex-direction: column;
+        gap: 5rem;
+      }
+      .tab-fields.active {
+        display: flex;
+      }
+      
+      .field-input {
+        width: 100%;
+        max-width: 440px;
+        padding: 0.9rem 1.2rem 0.9rem 3rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.97rem;
+        color: #1a1a1a;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      
+      .field-input::placeholder {
+        color: rgba(60, 30, 50, 0.38);
+      }
+      .field-input:focus {
+        border-color: #d4007a;
+        box-shadow: 0 0 0 3px rgba(212, 0, 122, 0.1);
+      }
+      
+      .field-wrap {
+        position: relative;
+        max-width: 440px;
+      }
+      
+      .field-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.1rem;
+        pointer-events: none;
+        color: rgba(60, 30, 50, 0.45);
+      }
+      
+      /* select */
+      .field-select {
+        width: 100%;
+        max-width: 440px;
+        padding: 0.9rem 2.5rem 0.9rem 1.2rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.97rem;
+        color: rgba(60, 30, 50, 0.5);
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      
+      .field-select:focus {
+        border-color: #d4007a;
+      }
+      .field-select.selected {
+        color: #1a1a1a;
+      }
+      
+      .select-wrap {
+        position: relative;
+        max-width: 440px;
+      }
+      
+      .select-arrow {
+        position: absolute;
+        right: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 1rem;
+        color: #888;
+      }
+      
+      /* date */
+      .field-date {
+        width: 100%;
+        max-width: 440px;
+        padding: 0.9rem 1.2rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.97rem;
+        color: #1a1a1a;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+      }
+      
+      .field-date::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        opacity: 0.6;
+      }
+      .field-date:focus {
+        border-color: #d4007a;
+      }
+      
+      /* textarea */
+      .field-textarea {
+        width: 100%;
+        max-width: 440px;
+        padding: 1rem 1.2rem;
+        border-radius: 20px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.97rem;
+        color: #1a1a1a;
+        outline: none;
+        resize: vertical;
+        min-height: 140px;
+        transition: border-color 0.2s;
+      }
+      
+      .field-textarea::placeholder {
+        color: rgba(60, 30, 50, 0.38);
+      }
+      .field-textarea:focus {
+        border-color: #d4007a;
+      }
+      
+      /* ── DIVIDER ── */
+      .divider {
+        width: 6px;
+        background: linear-gradient(180deg, #ff69b4, #ffb3d9);
+        position: relative;
+        flex-shrink: 0;
+      }
+      
+      /* ── RIGHT PANEL ── */
+      .right-panel {
+        flex: 1;
+        background: #ffcce8;
+        padding: 3rem 3rem 3rem 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+      
+      /* image upload area */
+      .img-upload-card {
+        width: 280px;
+        height: 300px;
+        border-radius: 20px;
+        border: 3px solid #ff69b4;
+        background: linear-gradient(180deg, #b8e8ff 0%, #7dd87d 65%, #4a9a4a 100%);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      
+      .img-upload-card:hover {
+        opacity: 0.9;
+      }
+      
+      .img-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+        position: absolute;
+        inset: 0;
+        border-radius: 17px;
+      }
+      
+      /* landscape placeholder */
+      .img-placeholder-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .img-insert-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        border: 2px solid #1a1a1a;
+        border-radius: 999px;
+        padding: 0.8rem 1.6rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        text-align: center;
+        cursor: pointer;
+        white-space: nowrap;
+        z-index: 2;
+      }
+      
+      #photo-file-input {
+        display: none;
+      }
+      
+      .name-input {
+        width: 280px;
+        padding: 0.9rem 1.4rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.97rem;
+        color: #1a1a1a;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      
+      .name-input::placeholder {
+        color: rgba(60, 30, 50, 0.38);
+      }
+      .name-input:focus {
+        border-color: #d4007a;
+      }
+      
+      .send-btn {
+        width: 200px;
+        padding: 0.9rem;
+        border-radius: 999px;
+        border: 2px solid #1a1a1a;
+        background: #fffacd;
+        color: #1a1a1a;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+      }
+      
+      .send-btn:hover {
+        background: #f0e040;
+        transform: translateY(-1px);
+      }
+      
+      /* error */
+      .error-msg {
+        color: #c0002a;
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+        background: rgba(220, 0, 50, 0.07);
+        border: 1px solid rgba(220, 0, 50, 0.25);
+        border-radius: 10px;
+        display: none;
+        max-width: 440px;
+      }
+      
+      /* messages */
+      .messages {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .message {
+        padding: 0.7rem 1rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+      }
+      .message.success {
+        border: 1px solid rgba(0, 160, 80, 0.35);
+        background: rgba(0, 160, 80, 0.08);
+        color: #005a28;
+      }
+      .message.error {
+        border: 1px solid rgba(220, 0, 50, 0.35);
+        background: rgba(220, 0, 50, 0.08);
+        color: #9a0022;
+      }
+      
+      @media (max-width: 768px) {
+        .page-wrap {
+          flex-direction: column;
+        }
+        .divider {
+          width: 100%;
+          height: 6px;
+        }
+        .tabs-col {
+          flex-direction: row;
+          position: static;
+          transform: none;
+          margin-top: 1rem;
+        }
+        .tab-pill {
+          border-radius: 20px;
+        }
+        .right-panel {
+          padding: 2rem 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post" action="{% url 'define_problem' %}" enctype="multipart/form-data" id="main-form">
+      {% csrf_token %}
+
+      <div class="page-wrap">
+        <!-- LEFT -->
+        <div class="left-panel">
+          <a class="back-btn" href="{% url 'home' %}" title="Back">&#8592;</a>
+
+          <div class="title-wrap">
+            <div class="title-define">Define</div>
+            <div class="title-big">
+              <span class="title-your">your</span>
+              <span class="title-problems">Problems</span>
+            </div>
+          </div>
+
+          {% if messages %}
+            <div class="messages">
+              {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="fields-wrap">
+            <!-- TAB: Location & Tags -->
+            <div class="tab-fields active" id="tab-location">
+              <div class="field-wrap">
+                <span class="field-icon">📍</span>
+                <input class="field-input" type="text" name="location" placeholder="Enter Your Problem Location" />
+              </div>
+              <div class="field-wrap">
+                <input class="field-input" type="text" name="tags" placeholder="Insert Your tags" style="padding-left:1.2rem;" />
+              </div>
+            </div>
+
+            <!-- TAB: Information -->
+            <div class="tab-fields" id="tab-info">
+              <div class="select-wrap">
+                <select class="field-select" name="category" id="category-select" onchange="this.classList.add('selected')">
+                  <option value="" disabled selected>Select the type of problem</option>
+                  <option value="WASTE">ปริมาณขยะและเศษอาหาร</option>
+                  <option value="POLLUTION">มลพิษและการใช้พลังงาน</option>
+                  <option value="WATER">การจัดการน้ำ</option>
+                  <option value="APP">ระบบแอปพลิเคชันและการสื่อสาร</option>
+                  <option value="COMMUNITY">การมีส่วนร่วมของชุมชน (ประชาคมจุฬาฯ)</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+
+              <input class="field-date" type="date" name="incident_date" id="incident-date" placeholder="DD/MM/YYYY" />
+
+              <textarea class="field-textarea" name="description" placeholder="Define your problem"></textarea>
+            </div>
+          </div>
+
+          <!-- Tab pills on right edge -->
+          <div class="tabs-col">
+            <div class="tab-pill active" onclick="switchTab('location', this)">
+              Location<br />&amp;tags
+            </div>
+            <div class="tab-pill" onclick="switchTab('info', this)">Information</div>
+          </div>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="divider"></div>
+
+        <!-- RIGHT -->
+        <div class="right-panel">
+          <!-- Image upload -->
+          <div id="preview-gallery" style="
+              display: grid;
+              grid-template-columns: repeat(2, 130px);
+              gap: 0.6rem;
+              max-height: 320px;
+              overflow-y: auto;
+          ">
+            <div class="img-upload-card" onclick="document.getElementById('photo-file-input').click()" style="width:130px; height:140px;">
+              <svg class="img-placeholder-svg" viewBox="0 0 280 300" xmlns="http://www.w3.org/2000/svg">
+                <rect width="280" height="300" fill="#b8e8ff" />
+                <rect width="280" height="300" fill="#b8e8ff" />
+                <ellipse cx="80" cy="60" rx="40" ry="30" fill="white" opacity="0.85" />
+                <ellipse cx="140" cy="45" rx="50" ry="35" fill="white" opacity="0.8" />
+                <ellipse cx="-10" cy="300" rx="160" ry="80" fill="#4a9a4a" />
+                <ellipse cx="290" cy="300" rx="150" ry="70" fill="#5aaa5a" />
+                <ellipse cx="140" cy="300" rx="120" ry="60" fill="#6aba6a" />
+              </svg>
+              <div class="img-insert-label" style="font-size:0.8rem; padding:0.5rem 0.8rem;">
+                Insert your<br />picture here
+              </div>
+            </div>
+          </div>
+          <input type="file" id="photo-file-input" name="photos" accept="image/*" multiple onchange="previewImages(this)" />
+
+          <input class="name-input" type="text" name="title" placeholder="Name Problem" required />
+
+          <button type="submit" class="send-btn">Send</button>
+        </div>
+      </div>
+    </form>
+
+    <script>
+      function switchTab(tab, el) {
+        document.querySelectorAll('.tab-fields').forEach((t) => t.classList.remove('active'))
+        document.querySelectorAll('.tab-pill').forEach((p) => p.classList.remove('active'))
+        document.getElementById('tab-' + tab).classList.add('active')
+        el.classList.add('active')
+      }
+      
+      function previewImages(input) {
+        if (!input.files || !input.files.length) return
+        const gallery = document.getElementById('preview-gallery')
+        const uploadBtn = gallery.querySelector('.img-upload-card')
+        gallery.innerHTML = ''
+        gallery.appendChild(uploadBtn)
+      
+        Array.from(input.files).forEach((file) => {
+          const reader = new FileReader()
+          reader.onload = function (e) {
+            const div = document.createElement('div')
+            div.style.cssText = 'width:130px; height:140px; border-radius:12px; overflow:hidden; border:2px solid #ff69b4; flex-shrink:0;'
+            const img = document.createElement('img')
+            img.src = e.target.result
+            img.style.cssText = 'width:100%; height:100%; object-fit:cover;'
+            div.appendChild(img)
+            gallery.appendChild(div)
+          }
+          reader.readAsDataURL(file)
+        })
+      }
+      
+      // Set max date to today
+      document.getElementById('incident-date').max = new Date().toISOString().split('T')[0]
+    </script>
+  </body>
+</html>

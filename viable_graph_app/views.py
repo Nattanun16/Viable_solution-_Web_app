@@ -187,16 +187,39 @@ def upload_photo(request):
     return JsonResponse({"success": False})
 
 
-def about_us(request):
-    return render(request, "about_us.html")
-
-
+@login_required(login_url="login")
 def define_problem(request):
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        category = request.POST.get("category", "WASTE")
+        description = request.POST.get("description", "").strip()
+        location = request.POST.get("location", "").strip()
+        tags = request.POST.get("tags", "").strip()
+        incident_date = request.POST.get("incident_date") or None
+        photo = request.FILES.get("photo")
+
+        if not title:
+            messages.error(request, "กรุณากรอกชื่อปัญหา")
+            return render(request, "define_problem.html")
+
+        Problem.objects.create(
+            title=title,
+            category=category,
+            description=description,
+            location=location,
+            tags=tags,
+            incident_date=incident_date,
+            photo=photo,
+            reported_by=request.user,
+        )
+        messages.success(request, "ส่งรายงานปัญหาเรียบร้อยแล้ว")
+        return redirect("home")
+
     return render(request, "define_problem.html")
 
 
-def profile(request):
-    return render(request, "profile.html")
+def about_us(request):
+    return render(request, "about_us.html")
 
 
 def propose_solutions(request):
