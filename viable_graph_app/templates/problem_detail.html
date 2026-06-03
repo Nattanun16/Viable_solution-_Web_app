@@ -219,6 +219,52 @@
         font-size: 0.83rem;
         font-weight: 500;
       }
+
+      /* --- ปุ่ม Edit / Delete (เพิ่มใหม่) --- */
+      .action-bar {
+        display: flex;
+        gap: 1rem;
+        padding: 0 2.5rem 2rem;
+      }
+
+      .btn-edit {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem 1rem;
+        background: #d4007a;
+        color: #fff;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: background 0.2s;
+      }
+
+      .btn-edit:hover {
+        background: #b0006a;
+      }
+
+      .btn-delete-form {
+        flex: 1;
+      }
+
+      .btn-delete {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: #fff;
+        color: #c0392b;
+        border: 2px solid #c0392b;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .btn-delete:hover {
+        background: #c0392b;
+        color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -324,6 +370,19 @@
             </div>
           {% endif %}
         </div>
+
+        <!-- ปุ่ม Edit / Delete — แสดงเฉพาะเจ้าของปัญหา (เพิ่มใหม่) -->
+        {% if request.user == problem.reported_by %}
+          <div class="action-bar">
+            <a href="{% url 'edit_problem' problem.id %}" class="btn-edit">✏️ แก้ไขปัญหา</a>
+            <form method="POST" action="{% url 'delete_problem' problem.id %}" class="btn-delete-form"
+                  onsubmit="return confirm('ยืนยันการลบปัญหานี้?')">
+              {% csrf_token %}
+              <button type="submit" class="btn-delete">🗑️ ลบปัญหา</button>
+            </form>
+          </div>
+        {% endif %}
+
       </div>
     </div>
   </body>

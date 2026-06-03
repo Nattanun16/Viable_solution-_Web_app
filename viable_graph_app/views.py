@@ -340,7 +340,7 @@ def login(request):
             messages.error(request, "reCAPTCHA ไม่ผ่าน กรุณาลองใหม่")
             return render(request, "login.html", context)
 
-        # 2. ✅ ตรวจ student_id / password จริง ๆ
+        # 2. ตรวจ student_id / password จริง ๆ
         student_id = request.POST.get("student_id", "").strip()
         password = request.POST.get("password", "")
 
@@ -420,3 +420,50 @@ def check_image_safety(request):
             )
 
     return JsonResponse({"safe": True, "reason": ""})
+
+@login_required(login_url="login")
+def edit_problem(request, problem_id):
+    # ดึงเฉพาะปัญหาที่เป็นของ user คนนี้เท่านั้น
+    problem = get_object_or_404(Problem, id=problem_id, reported_by=request.user)
+
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        category = request.POST.get("category", problem.category)
+        description = request.POST.get("description", "").strip()
+        location = request.POST.get("location", "").strip()
+        tags = request.POST.get("tags", "").strip()
+        incident_date = request.POST.get("incident_date") or None
+        photo = request.FILES.get("photo")
+
+        if not title:
+            messages.error(request, "กรุณากรอกชื่อปัญหา")
+            return render(request, "edit_problem.html", {"problem": problem})
+
+        problem.title = title
+        problem.category = category
+        problem.description = description
+        problem.location = location
+        problem.tags = tags
+        problem.incident_date = incident_date
+        if photo:
+            problem.photo = photo
+        problem.save()
+
+        messages.success(request, "แก้ไขปัญหาเรียบร้อยแล้ว")
+        return redirect("problem_detail", problem_id=problem.id)
+
+    return render(request, "edit_problem.html", {"problem": problem})
+
+
+@login_required(login_url="login")
+def delete_problem(request, problem_id):
+    # ดึงเฉพาะปัญหาที่เป็นของ user คนนี้เท่านั้น
+    problem = get_object_or_404(Problem, id=problem_id, reported_by=request.user)
+
+    if request.method == "POST":
+        problem.delete()
+        messages.success(request, "ลบปัญหาเรียบร้อยแล้ว")
+        return redirect("profile")
+
+    # ถ้าไม่ใช่ POST ให้กลับไปหน้า detail
+    return redirect("problem_detail", problem_id=problem_id)
