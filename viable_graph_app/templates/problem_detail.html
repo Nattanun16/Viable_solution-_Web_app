@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ problem.title }}</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: #ffb3d9;
+        min-height: 100vh;
+        color: #1a1a1a;
+      }
+      
+      /* NAVBAR */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2.5rem;
+        background: transparent;
+      }
+      
+      .navbar-brand {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2.2rem;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+      }
+      
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      
+      .nav-links a {
+        color: #1a1a1a;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      
+      .nav-links a:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      
+      /* CONTENT */
+      .page-content {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 2rem 2rem 4rem;
+      }
+      
+      /* back button */
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #c0187a;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+        transition: opacity 0.2s;
+      }
+      
+      .back-btn:hover {
+        opacity: 0.7;
+      }
+      
+      /* card */
+      .detail-card {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1.5px solid rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(16px);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 8px 40px rgba(180, 0, 100, 0.1);
+      }
+      
+      /* image */
+      .detail-img-wrap {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(180deg, #b8e8ff 0%, #7dd87d 65%, #4a9a4a 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .detail-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .status-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      
+      .status-PENDING {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .status-PROGRESS {
+        background: #cfe2ff;
+        color: #084298;
+      }
+      .status-COMPLETED {
+        background: #d1e7dd;
+        color: #0a3622;
+      }
+      
+      /* body */
+      .detail-body {
+        padding: 2rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      
+      .detail-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2.4rem;
+        color: #d4007a;
+        letter-spacing: 0.04em;
+        line-height: 1;
+      }
+      
+      .detail-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        font-size: 0.97rem;
+      }
+      
+      .detail-icon {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      
+      .detail-label {
+        font-weight: 600;
+        color: #c0187a;
+        min-width: 100px;
+        flex-shrink: 0;
+      }
+      
+      .detail-value {
+        color: #1a1a1a;
+        line-height: 1.6;
+      }
+      
+      .divider {
+        height: 1.5px;
+        background: rgba(200, 0, 100, 0.12);
+      }
+      
+      /* completed checkmark */
+      .completed-banner {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: #d1e7dd;
+        border: 1px solid #a3cfbb;
+        border-radius: 14px;
+        padding: 0.9rem 1.2rem;
+        color: #0a3622;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      
+      .check-circle {
+        width: 2rem;
+        height: 2rem;
+        background: #00c050;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      
+      /* tags */
+      .tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      
+      .tag {
+        background: rgba(212, 0, 122, 0.1);
+        color: #d4007a;
+        border: 1px solid rgba(212, 0, 122, 0.25);
+        border-radius: 999px;
+        padding: 0.25rem 0.85rem;
+        font-size: 0.83rem;
+        font-weight: 500;
+      }
+
+      /* --- ปุ่ม Edit / Delete (เพิ่มใหม่) --- */
+      .action-bar {
+        display: flex;
+        gap: 1rem;
+        padding: 0 2.5rem 2rem;
+      }
+
+      .btn-edit {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem 1rem;
+        background: #d4007a;
+        color: #fff;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: background 0.2s;
+      }
+
+      .btn-edit:hover {
+        background: #b0006a;
+      }
+
+      .btn-delete-form {
+        flex: 1;
+      }
+
+      .btn-delete {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: #fff;
+        color: #c0392b;
+        border: 2px solid #c0392b;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .btn-delete:hover {
+        background: #c0392b;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <a class="navbar-brand" href="{% url 'home' %}">Viable Graph</a>
+      <ul class="nav-links">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'propose_solution' %}">Purpose</a>
+        </li>
+        <li>
+          <a href="{% url 'profile' %}">Profile</a>
+        </li>
+        <li>
+          <a href="{% url 'logout' %}">Log Out</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="page-content">
+      <a class="back-btn" href="{% url 'profile' %}">&#8592; กลับหน้าโปรไฟล์</a>
+
+      <div class="detail-card">
+        <!-- Image -->
+        <div class="detail-img-wrap">
+          {% if problem.photo %}
+            <img src="{{ problem.photo.url }}" alt="{{ problem.title }}" />
+          {% else %}
+            <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect width="860" height="300" fill="#b8e8ff" />
+              <ellipse cx="200" cy="80" rx="100" ry="70" fill="white" opacity="0.85" />
+              <ellipse cx="420" cy="60" rx="130" ry="85" fill="white" opacity="0.8" />
+              <ellipse cx="0" cy="300" rx="400" ry="160" fill="#4a9a4a" />
+              <ellipse cx="860" cy="300" rx="380" ry="140" fill="#5aaa5a" />
+              <ellipse cx="430" cy="300" rx="320" ry="120" fill="#6aba6a" />
+            </svg>
+          {% endif %}
+
+          <span class="status-badge status-{{ problem.status }}">{{ problem.get_status_display }}</span>
+        </div>
+
+        <!-- Body -->
+        <div class="detail-body">
+          <h1 class="detail-title">{{ problem.title }}</h1>
+
+          {% if problem.status == 'COMPLETED' %}
+            <div class="completed-banner">
+              <div class="check-circle">✓</div>ปัญหานี้ได้รับการแก้ไขเรียบร้อยแล้ว
+            </div>
+          {% endif %}
+
+          <div class="divider"></div>
+
+          <div class="detail-row">
+            <span class="detail-icon">📂</span>
+            <span class="detail-label">ประเภทปัญหา</span>
+            <span class="detail-value">{{ problem.get_category_display }}</span>
+          </div>
+
+          {% if problem.location %}
+            <div class="detail-row">
+              <span class="detail-icon">📍</span>
+              <span class="detail-label">สถานที่</span>
+              <span class="detail-value">{{ problem.location }}</span>
+            </div>
+          {% endif %}
+
+          {% if problem.incident_date %}
+            <div class="detail-row">
+              <span class="detail-icon">📅</span>
+              <span class="detail-label">วันที่เกิดเหตุ</span>
+              <span class="detail-value">{{ problem.incident_date|date:'d/m/Y' }}</span>
+            </div>
+          {% endif %}
+
+          <div class="detail-row">
+            <span class="detail-icon">🕐</span>
+            <span class="detail-label">วันที่แจ้ง</span>
+            <span class="detail-value">{{ problem.created_at|date:'d/m/Y H:i' }}</span>
+          </div>
+
+          {% if problem.description %}
+            <div class="divider"></div>
+            <div class="detail-row">
+              <span class="detail-icon">📝</span>
+              <span class="detail-label">รายละเอียด</span>
+              <span class="detail-value">{{ problem.description|linebreaksbr }}</span>
+            </div>
+          {% endif %}
+
+          {% if problem.tags %}
+            <div class="detail-row">
+              <span class="detail-icon">🏷️</span>
+              <span class="detail-label">Tags</span>
+              <div class="tags-wrap">
+                {% for tag in problem.tags.split %}
+                  <span class="tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- ปุ่ม Edit / Delete — แสดงเฉพาะเจ้าของปัญหา (เพิ่มใหม่) -->
+        {% if request.user == problem.reported_by %}
+          <div class="action-bar">
+            <a href="{% url 'edit_problem' problem.id %}" class="btn-edit">✏️ แก้ไขปัญหา</a>
+            <form method="POST" action="{% url 'delete_problem' problem.id %}" class="btn-delete-form"
+                  onsubmit="return confirm('ยืนยันการลบปัญหานี้?')">
+              {% csrf_token %}
+              <button type="submit" class="btn-delete">🗑️ ลบปัญหา</button>
+            </form>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </body>
+</html>

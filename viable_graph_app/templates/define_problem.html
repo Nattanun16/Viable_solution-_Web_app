@@ -410,6 +410,15 @@
         background: rgba(220, 0, 50, 0.08);
         color: #9a0022;
       }
+
+      /* checking overlay on gallery */
+      .checking-overlay {
+        color: #888;
+        font-size: 13px;
+        align-self: center;
+        padding: 8px;
+        grid-column: span 2;
+      }
       
       @media (max-width: 768px) {
         .page-wrap {
@@ -545,27 +554,85 @@
         document.getElementById('tab-' + tab).classList.add('active')
         el.classList.add('active')
       }
-      
-      function previewImages(input) {
-        if (!input.files || !input.files.length) return
-        const gallery = document.getElementById('preview-gallery')
-        const uploadBtn = gallery.querySelector('.img-upload-card')
-        gallery.innerHTML = ''
-        gallery.appendChild(uploadBtn)
-      
-        Array.from(input.files).forEach((file) => {
-          const reader = new FileReader()
-          reader.onload = function (e) {
-            const div = document.createElement('div')
-            div.style.cssText = 'width:130px; height:140px; border-radius:12px; overflow:hidden; border:2px solid #ff69b4; flex-shrink:0;'
-            const img = document.createElement('img')
-            img.src = e.target.result
-            img.style.cssText = 'width:100%; height:100%; object-fit:cover;'
-            div.appendChild(img)
-            gallery.appendChild(div)
+
+      // ฟังก์ชันตรวจสอบภาพก่อน preview ด้วย Google Vision API
+      async function previewImages(input) {
+        if (!input.files || !input.files.length) return;
+
+        const gallery = document.getElementById('preview-gallery');
+        const uploadBtn = gallery.querySelector('.img-upload-card');
+
+        // ล้าง gallery และแสดง loading
+        gallery.innerHTML = '';
+        gallery.appendChild(uploadBtn);
+
+        const loadingMsg = document.createElement('div');
+        loadingMsg.className = 'checking-overlay';
+        loadingMsg.textContent = '⏳ กำลังตรวจสอบภาพ...';
+        gallery.appendChild(loadingMsg);
+
+        // ดึง CSRF token จาก cookie
+        const csrfToken = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('csrftoken='))
+          ?.split('=')[1] || '';
+
+        const files = Array.from(input.files);
+        const safeFiles = [];
+
+        for (const file of files) {
+          const formData = new FormData();
+          formData.append('photo', file);
+
+          try {
+            const res = await fetch('/api/check-image-safety/', {
+              method: 'POST',
+              headers: { 'X-CSRFToken': csrfToken },
+              body: formData,
+            });
+            const data = await res.json();
+
+            if (!data.safe) {
+              // แจ้งเตือนและข้ามไฟล์นี้
+              alert(`❌ ไม่สามารถอัปโหลดภาพ "${file.name}" ได้\n${data.reason}\nกรุณาเลือกภาพอื่น`);
+              continue;
+            }
+            safeFiles.push(file);
+          } catch (e) {
+            // ถ้า fetch ล้มเหลว ให้ผ่านไปก่อน (ไม่บล็อก user)
+            safeFiles.push(file);
           }
-          reader.readAsDataURL(file)
-        })
+        }
+
+        // ลบ loading message
+        const checking = gallery.querySelector('.checking-overlay');
+        if (checking) checking.remove();
+
+        if (safeFiles.length === 0) {
+          // ไม่มีภาพผ่านเลย → ล้าง input
+          input.value = '';
+          return;
+        }
+
+        // อัปเดต input ให้มีเฉพาะไฟล์ที่ผ่านการตรวจ (ใช้ DataTransfer)
+        const dt = new DataTransfer();
+        safeFiles.forEach(f => dt.items.add(f));
+        input.files = dt.files;
+
+        // แสดง preview เฉพาะภาพที่ผ่าน
+        safeFiles.forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const div = document.createElement('div');
+            div.style.cssText = 'width:130px; height:140px; border-radius:12px; overflow:hidden; border:2px solid #ff69b4; flex-shrink:0;';
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+            div.appendChild(img);
+            gallery.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        });
       }
       
       // Set max date to today

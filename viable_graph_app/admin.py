@@ -11,8 +11,14 @@ class ProblemGroupAdmin(admin.ModelAdmin):
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
+<<<<<<< HEAD
     # ปรับปรุง: เพิ่มคอลัมน์ "group" (กลุ่มปัญหาซ้ำ) และเปลี่ยนชื่อฟิลด์วันเวลาเล็กน้อยให้ตรงตามโมเดล
     list_display = ("title", "group", "category", "status", "created_at")
+=======
+    # เลือกคอลัมน์ที่จะโชว์ในหน้าตารางแอดมิน
+    list_display = ("title", "category", "status", "reported_by", "created_at")
+    # เพิ่มแถบตัวกรองข้อมูลด้านขวา
+>>>>>>> 0d75130dd8afd9d6dc950ec18a9ef185ebee6f53
     list_filter = ("category", "status", "created_at")
     search_fields = ("title", "description")
     list_editable = ("status",)

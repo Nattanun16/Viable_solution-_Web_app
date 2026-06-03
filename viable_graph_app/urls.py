@@ -19,4 +19,8 @@ urlpatterns = [
     path("propose_solutions_2/", views.propose_solutions_2, name="propose_solutions_2"),
     path("reset_pass/", views.reset_pass, name="reset_password"),
     path("upload-photo/", views.upload_photo, name="upload_photo"),
+    path("problem/<int:problem_id>/", views.problem_detail, name="problem_detail"),
+    path("api/check-image-safety/", views.check_image_safety, name="check_image_safety"),
+    path("problem/<int:problem_id>/edit/", views.edit_problem, name="edit_problem"),
+    path("problem/<int:problem_id>/delete/", views.delete_problem, name="delete_problem"),
 ]

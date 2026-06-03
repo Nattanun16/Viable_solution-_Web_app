@@ -617,35 +617,36 @@
           <div class="problems-grid">
             <p style="color:red;">จำนวนปัญหา: {{ my_problems.count }}</p>
             {% for problem in my_problems %}
-              <div class="problem-card">
-                <div class="problem-card-img">
+              <a href="{% url 'problem_detail' problem.id %}" style="text-decoration:none; color:inherit;">
+                <div class="problem-card">
+                  <div class="problem-card-img">
                     {% if problem.photo %}
-                        <img src="{{ problem.photo.url }}" 
-                             style="width:100%; height:100%; object-fit:cover;">
+                      <img src="{{ problem.photo.url }}" style="width:100%; height:100%; object-fit:cover;" />
                     {% else %}
-                        <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="200" height="120" fill="#b8e8ff" />
-                            <ellipse cx="60" cy="30" rx="25" ry="18" fill="white" opacity="0.9" />
-                            <ellipse cx="90" cy="25" rx="30" ry="20" fill="white" opacity="0.85" />
-                            <ellipse cx="0" cy="120" rx="120" ry="55" fill="#4a9a4a" />
-                            <ellipse cx="200" cy="120" rx="100" ry="45" fill="#5aaa5a" />
-                            <ellipse cx="100" cy="120" rx="80" ry="35" fill="#6aba6a" />
-                        </svg>
-                    {% endif %}
-                </div>
-                <div class="problem-card-body">
-                  <div>
-                    <div class="problem-name">{{ problem.title }}</div>
-                    {% if problem.status == 'COMPLETED' %}
-                      <div class="status-completed">Completed</div>
+                      <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="200" height="120" fill="#b8e8ff" />
+                        <ellipse cx="60" cy="30" rx="25" ry="18" fill="white" opacity="0.9" />
+                        <ellipse cx="90" cy="25" rx="30" ry="20" fill="white" opacity="0.85" />
+                        <ellipse cx="0" cy="120" rx="120" ry="55" fill="#4a9a4a" />
+                        <ellipse cx="200" cy="120" rx="100" ry="45" fill="#5aaa5a" />
+                        <ellipse cx="100" cy="120" rx="80" ry="35" fill="#6aba6a" />
+                      </svg>
                     {% endif %}
                   </div>
-                  <span style="font-size:0.8rem; color:#888; cursor:pointer;" title="{{ problem.description }}">ℹ️</span>
+                  <div class="problem-card-body">
+                    <div>
+                      <div class="problem-name">{{ problem.title }}</div>
+                      {% if problem.status == 'COMPLETED' %}
+                        <div class="status-completed">Completed</div>
+                      {% endif %}
+                    </div>
+                    <span title="{{ problem.description }}">ℹ️</span>
+                  </div>
+                  {% if problem.status == 'COMPLETED' %}
+                    <div class="check-badge">✓</div>
+                  {% endif %}
                 </div>
-                {% if problem.status == 'COMPLETED' %}
-                  <div class="check-badge">✓</div>
-                {% endif %}
-              </div>
+              </a>
             {% empty %}
               <p style="color:#a0005a; font-size:0.95rem; grid-column:1/-1;">ยังไม่มีปัญหาที่รายงาน</p>
             {% endfor %}

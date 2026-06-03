@@ -12,6 +12,9 @@ from .models import Problem
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+import base64
+import json
 
 
 # 1. หน้าแรกปกติ (เรนเดอร์หน้า home.html)
@@ -218,6 +221,12 @@ def define_problem(request):
     return render(request, "define_problem.html")
 
 
+@login_required(login_url="login")
+def problem_detail(request, problem_id):
+    problem = get_object_or_404(Problem, id=problem_id, reported_by=request.user)
+    return render(request, "problem_detail.html", {"problem": problem})
+
+
 def about_us(request):
     return render(request, "about_us.html")
 
@@ -331,7 +340,7 @@ def login(request):
             messages.error(request, "reCAPTCHA ไม่ผ่าน กรุณาลองใหม่")
             return render(request, "login.html", context)
 
-        # 2. ✅ ตรวจ student_id / password จริง ๆ
+        # 2. ตรวจ student_id / password จริง ๆ
         student_id = request.POST.get("student_id", "").strip()
         password = request.POST.get("password", "")
 
@@ -349,3 +358,112 @@ def login(request):
             return render(request, "login.html", context)
 
     return render(request, "login.html", context)
+
+@login_required(login_url="login")
+def check_image_safety(request):
+    """
+    รับไฟล์ภาพ ส่งไป Google Vision API เพื่อตรวจสอบเนื้อหาไม่เหมาะสม
+    คืนค่า JSON: { "safe": true/false, "reason": "..." }
+    """
+    if request.method != "POST":
+        return JsonResponse({"safe": False, "reason": "Method not allowed"}, status=405)
+
+    photo = request.FILES.get("photo")
+    if not photo:
+        return JsonResponse({"safe": False, "reason": "ไม่พบไฟล์ภาพ"}, status=400)
+
+    # อ่านไฟล์และแปลงเป็น base64
+    image_data = base64.b64encode(photo.read()).decode("utf-8")
+
+    api_key = settings.GOOGLE_VISION_API_KEY
+    if not api_key or api_key.startswith("YOUR_"):
+        # ถ้ายังไม่ตั้งค่า key ให้ผ่านไปก่อน (เพื่อไม่บล็อก dev)
+        return JsonResponse({"safe": True, "reason": ""})
+
+    url = f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
+    payload = {
+        "requests": [
+            {
+                "image": {"content": image_data},
+                "features": [{"type": "SAFE_SEARCH_DETECTION"}],
+            }
+        ]
+    }
+
+    try:
+        response = requests.post(url, json=payload, timeout=10)
+        result = response.json()
+        # เพิ่ม print เพื่อ debug
+        print("Vision API status:", response.status_code)
+        print("Vision API result:", result)
+    except requests.RequestException as e:
+        # เพิ่ม print เพื่อ debug
+        print("Vision API ERROR:", e)
+        return JsonResponse({"safe": True, "reason": ""})
+
+    # ดึงผล SafeSearch
+    annotations = result.get("responses", [{}])[0].get("safeSearchAnnotation", {})
+
+    # ระดับที่ถือว่าไม่ปลอดภัย: LIKELY หรือ VERY_LIKELY
+    UNSAFE_LEVELS = {"LIKELY", "VERY_LIKELY"}
+    CHECKS = {
+        "adult": "เนื้อหาลามกอนาจาร",
+        "violence": "เนื้อหาที่มีความรุนแรง",
+        "racy": "เนื้อหาไม่เหมาะสม",
+        "medical": "เนื้อหาทางการแพทย์ที่รุนแรง",
+    }
+
+    for field, label in CHECKS.items():
+        if annotations.get(field, "UNKNOWN") in UNSAFE_LEVELS:
+            return JsonResponse(
+                {"safe": False, "reason": f"ภาพถูกปฏิเสธ: พบ{label}"}
+            )
+
+    return JsonResponse({"safe": True, "reason": ""})
+
+@login_required(login_url="login")
+def edit_problem(request, problem_id):
+    # ดึงเฉพาะปัญหาที่เป็นของ user คนนี้เท่านั้น
+    problem = get_object_or_404(Problem, id=problem_id, reported_by=request.user)
+
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        category = request.POST.get("category", problem.category)
+        description = request.POST.get("description", "").strip()
+        location = request.POST.get("location", "").strip()
+        tags = request.POST.get("tags", "").strip()
+        incident_date = request.POST.get("incident_date") or None
+        photo = request.FILES.get("photo")
+
+        if not title:
+            messages.error(request, "กรุณากรอกชื่อปัญหา")
+            return render(request, "edit_problem.html", {"problem": problem})
+
+        problem.title = title
+        problem.category = category
+        problem.description = description
+        problem.location = location
+        problem.tags = tags
+        problem.incident_date = incident_date
+        if photo:
+            problem.photo = photo
+        problem.save()
+
+        messages.success(request, "แก้ไขปัญหาเรียบร้อยแล้ว")
+        return redirect("problem_detail", problem_id=problem.id)
+
+    return render(request, "edit_problem.html", {"problem": problem})
+
+
+@login_required(login_url="login")
+def delete_problem(request, problem_id):
+    # ดึงเฉพาะปัญหาที่เป็นของ user คนนี้เท่านั้น
+    problem = get_object_or_404(Problem, id=problem_id, reported_by=request.user)
+
+    if request.method == "POST":
+        problem.delete()
+        messages.success(request, "ลบปัญหาเรียบร้อยแล้ว")
+        return redirect("profile")
+
+    # ถ้าไม่ใช่ POST ให้กลับไปหน้า detail
+    return redirect("problem_detail", problem_id=problem_id)
