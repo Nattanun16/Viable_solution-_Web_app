@@ -538,7 +538,7 @@
               </div>
             </div>
           </div>
-          <input type="file" id="photo-file-input" name="photos" accept="image/*" multiple onchange="previewImages(this)" />
+          <input type="file" id="photo-file-input" name="photo" accept="image/*" onchange="previewImages(this)" />
 
           <input class="name-input" type="text" name="title" placeholder="Name Problem" required />
 
@@ -562,9 +562,10 @@
         const gallery = document.getElementById('preview-gallery');
         const uploadBtn = gallery.querySelector('.img-upload-card');
 
-        // ล้าง gallery และแสดง loading
-        gallery.innerHTML = '';
-        gallery.appendChild(uploadBtn);
+        // ล้าง preview เดิม (คงปุ่ม upload card ไว้)
+        Array.from(gallery.children).forEach(child => {
+          if (!child.classList.contains('img-upload-card')) child.remove();
+        });
 
         const loadingMsg = document.createElement('div');
         loadingMsg.className = 'checking-overlay';
@@ -577,62 +578,48 @@
           .find(row => row.startsWith('csrftoken='))
           ?.split('=')[1] || '';
 
-        const files = Array.from(input.files);
-        const safeFiles = [];
+        // รับแค่ไฟล์แรก (backend รองรับรูปเดียว)
+        const file = input.files[0];
+        const formData = new FormData();
+        formData.append('photo', file);
 
-        for (const file of files) {
-          const formData = new FormData();
-          formData.append('photo', file);
-
-          try {
-            const res = await fetch('/api/check-image-safety/', {
-              method: 'POST',
-              headers: { 'X-CSRFToken': csrfToken },
-              body: formData,
-            });
-            const data = await res.json();
-
-            if (!data.safe) {
-              // แจ้งเตือนและข้ามไฟล์นี้
-              alert(`❌ ไม่สามารถอัปโหลดภาพ "${file.name}" ได้\n${data.reason}\nกรุณาเลือกภาพอื่น`);
-              continue;
-            }
-            safeFiles.push(file);
-          } catch (e) {
-            // ถ้า fetch ล้มเหลว ให้ผ่านไปก่อน (ไม่บล็อก user)
-            safeFiles.push(file);
+        let passed = true;
+        try {
+          const res = await fetch('/api/check-image-safety/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+            body: formData,
+          });
+          const data = await res.json();
+          if (!data.safe) {
+            alert(`❌ ไม่สามารถอัปโหลดภาพ "${file.name}" ได้\n${data.reason}\nกรุณาเลือกภาพอื่น`);
+            passed = false;
           }
+        } catch (e) {
+          // ถ้า fetch ล้มเหลว ให้ผ่านไปก่อน (ไม่บล็อก user)
         }
 
         // ลบ loading message
         const checking = gallery.querySelector('.checking-overlay');
         if (checking) checking.remove();
 
-        if (safeFiles.length === 0) {
-          // ไม่มีภาพผ่านเลย → ล้าง input
+        if (!passed) {
           input.value = '';
           return;
         }
 
-        // อัปเดต input ให้มีเฉพาะไฟล์ที่ผ่านการตรวจ (ใช้ DataTransfer)
-        const dt = new DataTransfer();
-        safeFiles.forEach(f => dt.items.add(f));
-        input.files = dt.files;
-
-        // แสดง preview เฉพาะภาพที่ผ่าน
-        safeFiles.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            const div = document.createElement('div');
-            div.style.cssText = 'width:130px; height:140px; border-radius:12px; overflow:hidden; border:2px solid #ff69b4; flex-shrink:0;';
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
-            div.appendChild(img);
-            gallery.appendChild(div);
-          };
-          reader.readAsDataURL(file);
-        });
+        // แสดง preview ภาพที่ผ่านการตรวจ
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const div = document.createElement('div');
+          div.style.cssText = 'width:130px; height:140px; border-radius:12px; overflow:hidden; border:2px solid #ff69b4; flex-shrink:0;';
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+          div.appendChild(img);
+          gallery.appendChild(div);
+        };
+        reader.readAsDataURL(file);
       }
       
       // Set max date to today

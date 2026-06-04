@@ -755,45 +755,54 @@
       }
       
       // Apply photo to avatar and upload to server
-      function applyPhoto() {
+      async function applyPhoto() {
         const preview = document.getElementById('modal-preview')
         if (!preview.src || preview.style.display === 'none') {
           alert('กรุณาเลือกรูปก่อน')
           return
         }
-      
-        // Update avatar on page
-        const avatarImg = document.getElementById('avatar-img')
-        const avatarPlaceholder = document.getElementById('avatar-placeholder')
-        avatarImg.src = preview.src
-        avatarImg.style.display = 'block'
-        if (avatarPlaceholder) avatarPlaceholder.style.display = 'none'
-      
-        // Upload to server
+
         const fileInput = document.getElementById('photo-file-input')
-        if (fileInput.files && fileInput.files[0]) {
-          const formData = new FormData()
-          formData.append('photo', fileInput.files[0])
-          formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
-      
-          fetch('{% url "upload_photo" %}', {
+        if (!fileInput.files || !fileInput.files[0]) {
+          alert('กรุณาเลือกรูปก่อน')
+          return
+        }
+
+        // แสดง loading บนปุ่ม Continue
+        const btn = document.querySelector('.modal-continue-btn')
+        btn.disabled = true
+        btn.textContent = 'กำลังตรวจสอบ...'
+
+        const formData = new FormData()
+        formData.append('photo', fileInput.files[0])
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+        try {
+          const res = await fetch('{% url "upload_photo" %}', {
             method: 'POST',
             body: formData
           })
-            .then((res) => res.json())
-            .then((data) => {
-              if (!data.success) {
-                alert(`❌ ไม่สามารถอัปโหลดรูปโปรไฟล์ได้\n${data.reason || 'กรุณาเลือกรูปอื่น'}`);
-                // คืน avatar กลับเป็นรูปเดิม
-                avatarImg.src = '';
-                avatarImg.style.display = 'none';
-                if (avatarPlaceholder) avatarPlaceholder.style.display = 'flex';
-              }
-            })
-            .catch((err) => console.error(err))
+          const data = await res.json()
+
+          if (data.success) {
+            // ✅ ผ่านการตรวจสอบ → อัปเดต avatar
+            const avatarImg = document.getElementById('avatar-img')
+            const avatarPlaceholder = document.getElementById('avatar-placeholder')
+            avatarImg.src = preview.src
+            avatarImg.style.display = 'block'
+            if (avatarPlaceholder) avatarPlaceholder.style.display = 'none'
+            closeModal()
+          } else {
+            // ❌ ไม่ผ่าน → แจ้งเตือน ไม่อัปเดต avatar
+            alert(`❌ ไม่สามารถอัปโหลดรูปโปรไฟล์ได้\n${data.reason || 'กรุณาเลือกรูปอื่น'}`)
+          }
+        } catch (err) {
+          console.error(err)
+          alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง')
+        } finally {
+          btn.disabled = false
+          btn.textContent = 'Continue'
         }
-      
-        closeModal()
       }
     </script>
   </body>
