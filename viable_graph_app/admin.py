@@ -1,16 +1,12 @@
 from django.contrib import admin
-from .models import Problem, Suggestion
+from .models import Problem, Suggestion, Comment
 
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    # เลือกคอลัมน์ที่จะโชว์ในหน้าตารางแอดมิน
     list_display = ("title", "category", "status", "reported_by", "created_at")
-    # เพิ่มแถบตัวกรองข้อมูลด้านขวา
     list_filter = ("category", "status", "created_at")
-    # เพิ่มช่องค้นหาข้อมูล
     search_fields = ("title", "description")
-    # ยอมให้กดเปลี่ยนสถานะปัญหาในหน้าตารางได้เลย
     list_editable = ("status",)
 
 
@@ -18,3 +14,11 @@ class ProblemAdmin(admin.ModelAdmin):
 class SuggestionAdmin(admin.ModelAdmin):
     list_display = ("problem", "votes", "created_at")
     search_fields = ("suggestion_text",)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("author", "problem", "text", "rating", "is_reported", "created_at")
+    list_filter = ("is_reported", "rating", "created_at")
+    search_fields = ("text", "author__username")
+    list_editable = ("is_reported",)

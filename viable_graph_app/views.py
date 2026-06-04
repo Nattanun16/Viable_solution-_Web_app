@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db.models import Count
-from .models import Problem
+from .models import Problem, Comment
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,7 @@ from django.shortcuts import get_object_or_404
 import base64
 import json
 from django.db.models import Q
+from django.http import JsonResponse, HttpResponse
 
 
 # 1. หน้าแรกปกติ (เรนเดอร์หน้า home.html)
@@ -99,7 +100,15 @@ def favicon(request):
 
 def problem_detail_public(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
-    return render(request, "problem_detail.html", {"problem": problem})
+    comments = problem.comments.filter(parent=None).order_by("created_at")
+    return render(
+        request,
+        "problem_detail.html",
+        {
+            "problem": problem,
+            "comments": comments,
+        },
+    )
 
 
 def graph(request):
@@ -251,6 +260,51 @@ def define_problem(request):
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id, reported_by=request.user)
     return render(request, "problem_detail.html", {"problem": problem})
+
+
+@login_required(login_url="login")
+def add_comment(request, problem_id):
+    if request.method == "POST":
+        problem = get_object_or_404(Problem, id=problem_id)
+        text = request.POST.get("text", "").strip()
+        parent_id = request.POST.get("parent_id")
+        if text:
+            Comment.objects.create(
+                problem=problem,
+                author=request.user,
+                text=text,
+                parent_id=parent_id or None,
+            )
+    return redirect("problem_detail_public", problem_id=problem_id)
+
+
+@login_required(login_url="login")
+def rate_comment(request, comment_id):
+    if request.method == "POST":
+        comment = get_object_or_404(Comment, id=comment_id)
+        rating = int(request.POST.get("rating", 0))
+        if 1 <= rating <= 5:
+            comment.rating = rating
+            comment.save()
+        return redirect("problem_detail_public", problem_id=comment.problem.id)
+
+
+@login_required(login_url="login")
+def report_comment(request, comment_id):
+    if request.method == "POST":
+        comment = get_object_or_404(Comment, id=comment_id)
+        comment.is_reported = True
+        comment.save()
+        return redirect("problem_detail_public", problem_id=comment.problem.id)
+
+
+@login_required(login_url="login")
+def delete_comment(request, comment_id):
+    if request.method == "POST":
+        comment = get_object_or_404(Comment, id=comment_id, author=request.user)
+        problem_id = comment.problem.id
+        comment.delete()
+        return redirect("problem_detail_public", problem_id=problem_id)
 
 
 def about_us(request):

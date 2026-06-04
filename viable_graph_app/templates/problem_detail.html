@@ -28,7 +28,6 @@
         align-items: center;
         justify-content: space-between;
         padding: 1rem 2.5rem;
-        background: transparent;
       }
       
       .navbar-brand {
@@ -50,7 +49,6 @@
         text-decoration: none;
         font-size: 1rem;
         font-weight: 500;
-        transition: color 0.2s;
       }
       
       .nav-links a:hover {
@@ -58,166 +56,443 @@
         text-underline-offset: 4px;
       }
       
-      /* CONTENT */
-      .page-content {
-        max-width: 860px;
-        margin: 0 auto;
-        padding: 2rem 2rem 4rem;
+      /* TWO PANEL */
+      .two-panel {
+        display: flex;
+        min-height: calc(100vh - 72px);
       }
       
-      /* back button */
-      .back-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #c0187a;
-        font-weight: 600;
-        font-size: 0.95rem;
-        text-decoration: none;
-        margin-bottom: 1.5rem;
-        transition: opacity 0.2s;
-      }
-      
-      .back-btn:hover {
-        opacity: 0.7;
-      }
-      
-      /* card */
-      .detail-card {
-        background: rgba(255, 255, 255, 0.75);
-        border: 1.5px solid rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(16px);
-        border-radius: 24px;
-        overflow: hidden;
-        box-shadow: 0 8px 40px rgba(180, 0, 100, 0.1);
-      }
-      
-      /* image */
-      .detail-img-wrap {
-        width: 100%;
-        height: 300px;
-        background: linear-gradient(180deg, #b8e8ff 0%, #7dd87d 65%, #4a9a4a 100%);
+      /* LEFT */
+      .left-panel {
+        flex: 1;
+        background: #d8f0ff;
+        display: flex;
+        flex-direction: column;
         position: relative;
-        overflow: hidden;
+        min-width: 0;
       }
       
-      .detail-img-wrap img {
+      /* image slider */
+      .slider-wrap {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        background: linear-gradient(180deg, #b8e8ff 0%, #7dd87d 65%, #4a9a4a 100%);
+      }
+      
+      .slider-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
       
-      .status-badge {
+      .slider-btn {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.4rem 1rem;
-        border-radius: 999px;
-        font-size: 0.85rem;
-        font-weight: 700;
-      }
-      
-      .status-PENDING {
-        background: #fff3cd;
-        color: #856404;
-      }
-      .status-PROGRESS {
-        background: #cfe2ff;
-        color: #084298;
-      }
-      .status-COMPLETED {
-        background: #d1e7dd;
-        color: #0a3622;
-      }
-      
-      /* body */
-      .detail-body {
-        padding: 2rem 2.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.7);
+        border: none;
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 2;
         display: flex;
-        flex-direction: column;
-        gap: 1.2rem;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
       }
       
-      .detail-title {
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 2.4rem;
-        color: #d4007a;
-        letter-spacing: 0.04em;
-        line-height: 1;
+      .slider-btn:hover {
+        background: rgba(255, 255, 255, 0.95);
+      }
+      .slider-btn.prev {
+        left: 0.75rem;
+      }
+      .slider-btn.next {
+        right: 0.75rem;
       }
       
-      .detail-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        font-size: 0.97rem;
+      /* problem info box */
+      .problem-info-box {
+        margin: 0.8rem;
+        background: rgba(220, 210, 255, 0.5);
+        border: 1.5px solid rgba(180, 180, 220, 0.4);
+        border-radius: 16px;
+        padding: 1rem 1.2rem 1rem;
+        flex: 1;
+        position: relative;
+        min-height: 200px;
       }
       
-      .detail-icon {
-        font-size: 1.1rem;
-        flex-shrink: 0;
-        margin-top: 1px;
+      .problem-info-title {
+        font-size: 0.95rem;
+        color: rgba(100, 80, 150, 0.6);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
       }
       
-      .detail-label {
-        font-weight: 600;
-        color: #c0187a;
-        min-width: 100px;
-        flex-shrink: 0;
-      }
-      
-      .detail-value {
-        color: #1a1a1a;
+      .problem-info-desc {
+        font-size: 0.9rem;
+        color: rgba(80, 60, 120, 0.7);
         line-height: 1.6;
       }
       
-      .divider {
-        height: 1.5px;
-        background: rgba(200, 0, 100, 0.12);
-      }
-      
-      /* completed checkmark */
-      .completed-banner {
+      .problem-meta {
+        position: absolute;
+        bottom: 0.8rem;
+        left: 1rem;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        background: #d1e7dd;
-        border: 1px solid #a3cfbb;
-        border-radius: 14px;
-        padding: 0.9rem 1.2rem;
-        color: #0a3622;
-        font-weight: 600;
-        font-size: 1rem;
+        gap: 0.6rem;
+        flex-wrap: wrap;
       }
       
-      .check-circle {
-        width: 2rem;
-        height: 2rem;
+      .meta-tag {
+        background: #00bcd4;
+        color: white;
+        border-radius: 999px;
+        padding: 0.2rem 0.75rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      
+      .meta-location {
+        font-size: 0.82rem;
+        color: rgba(80, 60, 120, 0.7);
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+      }
+      
+      .completed-overlay {
+        position: absolute;
+        bottom: 0.6rem;
+        right: 0.8rem;
+        width: 2.8rem;
+        height: 2.8rem;
         background: #00c050;
+        border: 3px solid #ffffff;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 1.1rem;
+        font-size: 1.4rem;
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* RIGHT */
+      .right-panel {
+        width: 55%;
+        min-width: 400px;
+        background: #ffcce8;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .comment-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 1rem 1.5rem 0.6rem;
+      }
+      
+      .comment-date {
+        font-size: 0.88rem;
+        color: #7a90b0;
+        font-weight: 500;
+      }
+      
+      .comment-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2rem;
+        color: #1a1a1a;
+        letter-spacing: 0.05em;
+      }
+      
+      /* comments list */
+      .comments-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem 1.2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      /* single comment */
+      .comment-item {
+        display: flex;
+        gap: 0.6rem;
+        align-items: flex-start;
+      }
+      
+      .comment-avatar {
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        border: 1.5px solid #1a1a1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: #f0f0f0;
+        overflow: hidden;
+      }
+      
+      .comment-avatar svg {
+        width: 70%;
+        height: 70%;
+      }
+      
+      .comment-main {
+        flex: 1;
+      }
+      
+      .comment-username {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.25rem;
+      }
+      
+      .comment-bubble {
+        background: rgba(220, 215, 255, 0.55);
+        border-radius: 12px;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.88rem;
+        color: rgba(80, 60, 120, 0.75);
+        min-height: 60px;
+        line-height: 1.5;
+      }
+      
+      .comment-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.35rem;
+        flex-wrap: wrap;
+      }
+      
+      .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: rgba(80, 60, 120, 0.65);
+        padding: 0.1rem 0.3rem;
+        transition: color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+        line-height: 1;
+      }
+      
+      .action-btn:hover {
+        color: #d4007a;
+      }
+      
+      .action-divider {
+        width: 1px;
+        height: 14px;
+        background: rgba(150, 120, 180, 0.3);
+      }
+      
+      .stars-display {
+        margin-left: auto;
+        display: flex;
+        gap: 0.1rem;
+      }
+      
+      .star {
+        font-size: 1rem;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.15s;
+      }
+      
+      .star.filled {
+        color: #f0a000;
+      }
+      .star:hover {
+        color: #f0a000;
+      }
+      
+      /* reply indent */
+      .reply-indent {
+        padding-left: 2rem;
+        position: relative;
+      }
+      
+      .reply-indent::before {
+        content: '';
+        position: absolute;
+        left: 0.9rem;
+        top: -0.5rem;
+        bottom: 0.8rem;
+        width: 2px;
+        background: #d4007a;
+        border-radius: 2px;
+        opacity: 0.4;
+      }
+      
+      /* reply box (inline) */
+      .reply-box {
+        display: none;
+        margin-top: 0.5rem;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 10px;
+        padding: 0.5rem 0.75rem;
+      }
+      
+      .reply-box.open {
+        display: block;
+      }
+      
+      .reply-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        outline: none;
+        color: #1a1a1a;
+        resize: none;
+        min-height: 40px;
+      }
+      
+      .reply-submit {
+        background: #d4007a;
+        color: white;
+        border: none;
+        border-radius: 999px;
+        padding: 0.3rem 1rem;
+        font-size: 0.82rem;
+        cursor: pointer;
+        float: right;
+        margin-top: 0.3rem;
+      }
+      
+      /* comment input bar */
+      .comment-input-wrap {
+        padding: 0.75rem 1.2rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      
+      .comment-input {
+        flex: 1;
+        padding: 0.75rem 1.2rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+        color: #1a1a1a;
+        outline: none;
+      }
+      
+      .comment-input::placeholder {
+        color: rgba(60, 30, 50, 0.38);
+      }
+      
+      .comment-submit {
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 50%;
+        background: #1a1a1a;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
         flex-shrink: 0;
       }
       
-      /* tags */
-      .tags-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
+      .comment-submit:hover {
+        background: #d4007a;
       }
       
-      .tag {
-        background: rgba(212, 0, 122, 0.1);
-        color: #d4007a;
-        border: 1px solid rgba(212, 0, 122, 0.25);
-        border-radius: 999px;
-        padding: 0.25rem 0.85rem;
-        font-size: 0.83rem;
-        font-weight: 500;
+      /* RATING MODAL */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .modal-overlay.open {
+        display: flex;
+      }
+      
+      .modal-box {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 2.5rem 3rem;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        animation: popIn 0.2s ease both;
+        min-width: 340px;
+      }
+      
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      .modal-close {
+        position: absolute;
+        top: 0.8rem;
+        right: 1rem;
+        font-size: 1.4rem;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: #555;
+      }
+      
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        color: #1a1a1a;
+      }
+      
+      .modal-stars {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      
+      .modal-star {
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: #ddd;
+        transition: color 0.15s, transform 0.15s;
+      }
+      
+      .modal-star:hover,
+      .modal-star.active {
+        color: #f0a000;
+        transform: scale(1.1);
       }
     </style>
   </head>
@@ -232,99 +507,217 @@
         <li>
           <a href="{% url 'propose_solution' %}">Purpose</a>
         </li>
-        <li>
-          <a href="{% url 'profile' %}">Profile</a>
-        </li>
-        <li>
-          <a href="{% url 'logout' %}">Log Out</a>
-        </li>
+        {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'profile' %}">Profile</a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}">Log Out</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'login' %}">Log In</a>
+          </li>
+        {% endif %}
       </ul>
     </nav>
 
-    <div class="page-content">
-      <a class="back-btn" href="{% url 'propose_solutions' %}">&#8592; กลับไปนำเสนอปัญหา</a>
-
-      <div class="detail-card">
-        <!-- Image -->
-        <div class="detail-img-wrap">
+    <div class="two-panel">
+      <!-- LEFT: Problem info -->
+      <div class="left-panel">
+        <div class="slider-wrap">
           {% if problem.photo %}
-            <img src="{{ problem.photo.url }}" alt="{{ problem.title }}" />
+            <img id="slide-img" src="{{ problem.photo.url }}" alt="{{ problem.title }}" />
           {% else %}
-            <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-              <rect width="860" height="300" fill="#b8e8ff" />
-              <ellipse cx="200" cy="80" rx="100" ry="70" fill="white" opacity="0.85" />
-              <ellipse cx="420" cy="60" rx="130" ry="85" fill="white" opacity="0.8" />
-              <ellipse cx="0" cy="300" rx="400" ry="160" fill="#4a9a4a" />
-              <ellipse cx="860" cy="300" rx="380" ry="140" fill="#5aaa5a" />
-              <ellipse cx="430" cy="300" rx="320" ry="120" fill="#6aba6a" />
+            <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+              <rect width="600" height="400" fill="#b8e8ff" />
+              <ellipse cx="150" cy="80" rx="80" ry="55" fill="white" opacity="0.85" />
+              <ellipse cx="320" cy="55" rx="110" ry="70" fill="white" opacity="0.8" />
+              <ellipse cx="0" cy="400" rx="300" ry="130" fill="#4a9a4a" />
+              <ellipse cx="600" cy="400" rx="280" ry="120" fill="#5aaa5a" />
+              <ellipse cx="300" cy="400" rx="250" ry="100" fill="#6aba6a" />
             </svg>
           {% endif %}
-
-          <span class="status-badge status-{{ problem.status }}">{{ problem.get_status_display }}</span>
+          <button class="slider-btn prev" onclick="history.back()">&#8592;</button>
         </div>
 
-        <!-- Body -->
-        <div class="detail-body">
-          <h1 class="detail-title">{{ problem.title }}</h1>
+        <div class="problem-info-box">
+          <div class="problem-info-title">Problem</div>
+          <div class="problem-info-desc">{{ problem.description|default:'' }}</div>
+
+          <div class="problem-meta">
+            {% if problem.tags %}
+              {% for tag in problem.tags.split %}
+                <span class="meta-tag"># {{ tag }}</span>
+              {% endfor %}
+            {% endif %}
+            {% if problem.location %}
+              <span class="meta-location">📍 {{ problem.location }}</span>
+            {% endif %}
+          </div>
 
           {% if problem.status == 'COMPLETED' %}
-            <div class="completed-banner">
-              <div class="check-circle">✓</div>ปัญหานี้ได้รับการแก้ไขเรียบร้อยแล้ว
-            </div>
-          {% endif %}
-
-          <div class="divider"></div>
-
-          <div class="detail-row">
-            <span class="detail-icon">📂</span>
-            <span class="detail-label">ประเภทปัญหา</span>
-            <span class="detail-value">{{ problem.get_category_display }}</span>
-          </div>
-
-          {% if problem.location %}
-            <div class="detail-row">
-              <span class="detail-icon">📍</span>
-              <span class="detail-label">สถานที่</span>
-              <span class="detail-value">{{ problem.location }}</span>
-            </div>
-          {% endif %}
-
-          {% if problem.incident_date %}
-            <div class="detail-row">
-              <span class="detail-icon">📅</span>
-              <span class="detail-label">วันที่เกิดเหตุ</span>
-              <span class="detail-value">{{ problem.incident_date|date:'d/m/Y' }}</span>
-            </div>
-          {% endif %}
-
-          <div class="detail-row">
-            <span class="detail-icon">🕐</span>
-            <span class="detail-label">วันที่แจ้ง</span>
-            <span class="detail-value">{{ problem.created_at|date:'d/m/Y g:i A' }}</span>
-          </div>
-
-          {% if problem.description %}
-            <div class="divider"></div>
-            <div class="detail-row">
-              <span class="detail-icon">📝</span>
-              <span class="detail-label">รายละเอียด</span>
-              <span class="detail-value">{{ problem.description|linebreaksbr }}</span>
-            </div>
-          {% endif %}
-
-          {% if problem.tags %}
-            <div class="detail-row">
-              <span class="detail-icon">🏷️</span>
-              <span class="detail-label">Tags</span>
-              <div class="tags-wrap">
-                {% for tag in problem.tags.split %}
-                  <span class="tag">{{ tag }}</span>
-                {% endfor %}
-              </div>
-            </div>
+            <div class="completed-overlay">✓</div>
           {% endif %}
         </div>
       </div>
+
+      <!-- RIGHT: Comments -->
+      <div class="right-panel">
+        <div class="comment-header">
+          <span class="comment-date">{{ problem.created_at|date:'d/m/y' }}</span>
+          <span class="comment-title">Comment</span>
+        </div>
+
+        <div class="comments-list" id="comments-list">
+          {% for comment in comments %}
+            <div class="comment-item">
+              <div class="comment-avatar">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="48" stroke="#1a1a1a" stroke-width="4" />
+                  <circle cx="50" cy="36" r="16" stroke="#1a1a1a" stroke-width="4" />
+                  <path d="M14 82c0-19.882 16.118-36 36-36s36 16.118 36 36" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="comment-main">
+                <div class="comment-username">{{ comment.author.username }}</div>
+                <div class="comment-bubble">{{ comment.text }}</div>
+                <div class="comment-actions">
+                  <button class="action-btn" data-reply-id="reply-{{ comment.id }}" onclick="toggleReply(this)">Reply ▾</button>
+                  <div class="action-divider"></div>
+                  <form method="post" action="{% url 'report_comment' comment.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="action-btn" type="submit" title="รายงาน">👎</button>
+                  </form>
+                  <div class="stars-display">
+                    <span class="star {% if 1 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                    <span class="star {% if 2 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                    <span class="star {% if 3 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                    <span class="star {% if 4 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                    <span class="star {% if 5 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                  </div>
+                </div>
+
+                <!-- Reply box -->
+                <div class="reply-box" id="reply-{{ comment.id }}">
+                  <form method="post" action="{% url 'add_comment' problem.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}" />
+                    <textarea class="reply-input" name="text" placeholder="ตอบกลับ..." rows="2"></textarea>
+                    <button type="submit" class="reply-submit">ส่ง</button>
+                    <div style="clear:both;"></div>
+                  </form>
+                </div>
+
+                <!-- Replies -->
+                {% for reply in comment.replies.all %}
+                  <div class="reply-indent" style="margin-top:0.5rem;">
+                    <div class="comment-item">
+                      <div class="comment-avatar" style="width:1.8rem;height:1.8rem;">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="50" cy="50" r="48" stroke="#1a1a1a" stroke-width="4" />
+                          <circle cx="50" cy="36" r="16" stroke="#1a1a1a" stroke-width="4" />
+                          <path d="M14 82c0-19.882 16.118-36 36-36s36 16.118 36 36" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round" />
+                        </svg>
+                      </div>
+                      <div class="comment-main">
+                        <div class="comment-username" style="font-size:0.78rem;">{{ reply.author.username }}</div>
+                        <div class="comment-bubble" style="font-size:0.84rem;">{{ reply.text }}</div>
+                        <div class="comment-actions">
+                          <div class="action-divider"></div>
+                          <form method="post" action="{% url 'report_comment' reply.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="action-btn" type="submit" title="รายงาน">👎</button>
+                          </form>
+                          <div class="stars-display">
+                            <span class="star {% if 1 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                            <span class="star {% if 2 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                            <span class="star {% if 3 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                            <span class="star {% if 4 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                            <span class="star {% if 5 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% empty %}
+            <p style="color:rgba(150,100,130,0.6); font-size:0.9rem; text-align:center; margin-top:2rem;">ยังไม่มีคอมเมนต์ เป็นคนแรกที่แสดงความคิดเห็น!</p>
+          {% endfor %}
+        </div>
+
+        <!-- Input bar -->
+        {% if user.is_authenticated %}
+          <form method="post" action="{% url 'add_comment' problem.id %}" class="comment-input-wrap">
+            {% csrf_token %}
+            <input class="comment-input" type="text" name="text" placeholder="your comment" required />
+            <button class="comment-submit" type="submit">↑</button>
+          </form>
+        {% else %}
+          <div class="comment-input-wrap">
+            <a href="{% url 'login' %}" style="color:#d4007a; font-size:0.9rem; font-weight:600;">ล็อกอินเพื่อแสดงความคิดเห็น</a>
+          </div>
+        {% endif %}
+      </div>
     </div>
+
+    <!-- RATING MODAL -->
+    <div class="modal-overlay" id="rating-modal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="closeRating()">✕</button>
+        <div class="modal-title">What do you think?</div>
+        <form method="post" id="rating-form" action="">
+          {% csrf_token %}
+          <input type="hidden" name="rating" id="rating-value" value="0" />
+          <div class="modal-stars">
+            <span class="modal-star" data-value="1" onclick="setRating(1)">★</span>
+            <span class="modal-star" data-value="2" onclick="setRating(2)">★</span>
+            <span class="modal-star" data-value="3" onclick="setRating(3)">★</span>
+            <span class="modal-star" data-value="4" onclick="setRating(4)">★</span>
+            <span class="modal-star" data-value="5" onclick="setRating(5)">★</span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function toggleReply(btn) {
+        const id = btn.getAttribute('data-reply-id')
+        const box = document.getElementById(id)
+        box.classList.toggle('open')
+      }
+      
+      function openRating(commentId) {
+        const isAuth = '{{ user.is_authenticated }}' === 'True'
+        if (!isAuth) {
+          window.location = "{% url 'login' %}"
+          return
+        }
+        document.getElementById('rating-form').action = '/comment/' + commentId + '/rate/'
+        document.getElementById('rating-value').value = 0
+        document.querySelectorAll('.modal-star').forEach((s) => s.classList.remove('active'))
+        document.getElementById('rating-modal').classList.add('open')
+      }
+      
+      function closeRating() {
+        document.getElementById('rating-modal').classList.remove('open')
+      }
+      
+      function setRating(val) {
+        document.getElementById('rating-value').value = val
+        document.querySelectorAll('.modal-star').forEach((s, i) => {
+          s.classList.toggle('active', i < val)
+        })
+        setTimeout(() => {
+          document.getElementById('rating-form').submit()
+        }, 400)
+      }
+      
+      document.getElementById('rating-modal').addEventListener('click', function (e) {
+        if (e.target === this) closeRating()
+      })
+    </script>
   </body>
 </html>

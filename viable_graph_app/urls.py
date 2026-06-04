@@ -28,4 +28,12 @@ urlpatterns = [
         views.problem_detail_public,
         name="problem_detail_public",
     ),
+    path("problem/<int:problem_id>/comment/", views.add_comment, name="add_comment"),
+    path("comment/<int:comment_id>/rate/", views.rate_comment, name="rate_comment"),
+    path(
+        "comment/<int:comment_id>/report/", views.report_comment, name="report_comment"
+    ),
+    path(
+        "comment/<int:comment_id>/delete/", views.delete_comment, name="delete_comment"
+    ),
 ]
