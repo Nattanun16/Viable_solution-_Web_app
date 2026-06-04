@@ -160,8 +160,19 @@
 
         .problems-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 1.2rem;
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        /* Responsive breakpoints: up to 5 columns on large screens */
+        @media (max-width: 1200px) {
+            .problems-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 800px) {
+            .problems-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .problems-grid { grid-template-columns: 1fr; }
         }
 
         /* CARD */

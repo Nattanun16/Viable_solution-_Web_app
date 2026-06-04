@@ -300,7 +300,7 @@
           <div class="detail-row">
             <span class="detail-icon">🕐</span>
             <span class="detail-label">วันที่แจ้ง</span>
-            <span class="detail-value">{{ problem.created_at|date:'d/m/Y H:i' }}</span>
+            <span class="detail-value">{{ problem.created_at|date:'d/m/Y g:i A' }}</span>
           </div>
 
           {% if problem.description %}
