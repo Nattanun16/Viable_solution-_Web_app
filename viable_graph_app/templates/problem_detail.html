@@ -185,6 +185,51 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
       }
       
+      .problem-actions {
+        display: flex;
+        gap: 0.6rem;
+        margin: 0.8rem 0.8rem 0;
+        align-items: center;
+      }
+      
+      .btn-edit,
+      .btn-delete {
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        border: none;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      
+      .btn-edit {
+        background: #00bcd4;
+        color: white;
+      }
+      
+      .btn-edit:hover {
+        background: #00a9c4;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+      }
+      
+      .btn-delete {
+        background: #ff4081;
+        color: white;
+      }
+      
+      .btn-delete:hover {
+        background: #f50057;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
+      }
+      
       /* RIGHT */
       .right-panel {
         width: 55%;
@@ -270,6 +315,11 @@
         line-height: 1.5;
       }
       
+      .comment-bubble.mine {
+        background: rgba(255, 240, 200, 0.7);
+        text-align: right;
+      }
+      
       .comment-actions {
         display: flex;
         align-items: center;
@@ -282,14 +332,13 @@
         background: none;
         border: none;
         cursor: pointer;
-        font-size: 0.9rem;
+        font-size: 0.82rem;
         color: rgba(80, 60, 120, 0.65);
-        padding: 0.1rem 0.3rem;
+        padding: 0.1rem 0.2rem;
         transition: color 0.2s;
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 0.2rem;
-        line-height: 1;
       }
       
       .action-btn:hover {
@@ -521,56 +570,11 @@
         {% endif %}
       </ul>
     </nav>
+
     <div class="two-panel">
       <!-- LEFT: Problem info -->
       <div class="left-panel">
-        <body class="slider-wrap">
-    <div class="page-content">
-  {% if messages %}
-    <div style="margin-bottom:1rem;">
-      {% for message in messages %}
-        <div style="background:#d1e7dd; color:#0a3622; border-radius:10px; padding:0.7rem 1rem; font-size:0.92rem; margin-bottom:0.4rem;">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.8rem;">
-  <a class="back-btn" style="margin-bottom:0;" href="{% url 'propose_solution' %}">&#8592; กลับไปนำเสนอปัญหา</a>
-
-  {% if user.is_authenticated and problem.reported_by == user %}
-    <div style="display:flex; gap:0.75rem;">
-      <a href="{% url 'edit_problem' problem.id %}"
-         style="display:inline-flex; align-items:center; gap:0.4rem;
-                padding:0.55rem 1.2rem; border-radius:999px;
-                background:#fff3cd; color:#856404;
-                border:2px solid #e8c000; font-weight:600;
-                font-size:0.9rem; text-decoration:none;
-                transition:background 0.2s;">
-        ✏️ แก้ไข
-      </a>
-
-      <form method="POST" action="{% url 'delete_problem' problem.id %}"
-            onsubmit="return confirm('ยืนยันการลบปัญหานี้? ไม่สามารถกู้คืนได้')">
-        {% csrf_token %}
-        <button type="submit"
-                style="display:inline-flex; align-items:center; gap:0.4rem;
-                       padding:0.55rem 1.2rem; border-radius:999px;
-                       background:#f8d7da; color:#842029;
-                       border:2px solid #f1aeb5; font-weight:600;
-                       font-size:0.9rem; cursor:pointer;
-                       transition:background 0.2s;">
-          🗑️ ลบ
-        </button>
-      </form>
-    </div>
-  {% endif %}
-</div>
-  <body>
-    <div>
-      <div class="detail-card">
-        <!-- Image -->
-        <div class="detail-img-wrap">
+        <div class="slider-wrap">
           {% if problem.photo %}
             <img id="slide-img" src="{{ problem.photo.url }}" alt="{{ problem.title }}" />
           {% else %}
@@ -590,14 +594,36 @@
           <div class="problem-info-title">Problem</div>
           <div class="problem-info-desc">{{ problem.description|default:'' }}</div>
 
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(180, 180, 220, 0.3); font-size: 0.9rem;">
+            {% if problem.category %}
+              <div style="margin-bottom: 0.6rem;">
+                <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📁 ประเภทปัญหา:</span>
+                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.get_category_display }}</span>
+              </div>
+            {% endif %}
+            {% if problem.location %}
+              <div style="margin-bottom: 0.6rem;">
+                <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📍 สถานที่:</span>
+                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.location }}</span>
+              </div>
+            {% endif %}
+            {% if problem.incident_date %}
+              <div style="margin-bottom: 0.6rem;">
+                <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📅 วันที่เกิดเหตุ:</span>
+                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.incident_date|date:"d/m/Y" }}</span>
+              </div>
+            {% endif %}
+            <div style="margin-bottom: 0.6rem;">
+              <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">⏱️ วันที่สร้าง:</span>
+              <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.created_at|date:"d/m/Y H:i" }}</span>
+            </div>
+          </div>
+
           <div class="problem-meta">
             {% if problem.tags %}
               {% for tag in problem.tags.split %}
                 <span class="meta-tag"># {{ tag }}</span>
               {% endfor %}
-            {% endif %}
-            {% if problem.location %}
-              <span class="meta-location">📍 {{ problem.location }}</span>
             {% endif %}
           </div>
 
@@ -605,6 +631,16 @@
             <div class="completed-overlay">✓</div>
           {% endif %}
         </div>
+
+        {% if problem.reported_by == user %}
+        <div class="problem-actions">
+          <a href="{% url 'edit_problem' problem.id %}" class="btn-edit">✏️ แก้ไข</a>
+          <form method="post" action="{% url 'delete_problem' problem.id %}" style="display:inline;" onsubmit="return confirm('คุณแน่ใจหรือว่าต้องการลบปัญหานี้?');">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">🗑️ ลบ</button>
+          </form>
+        </div>
+        {% endif %}
       </div>
 
       <!-- RIGHT: Comments -->
@@ -626,20 +662,25 @@
               </div>
               <div class="comment-main">
                 <div class="comment-username">{{ comment.author.username }}</div>
-                <div class="comment-bubble">{{ comment.text }}</div>
+                <div class="comment-bubble {% if comment.author == user %}mine{% endif %}">{{ comment.text }}</div>
                 <div class="comment-actions">
-                  <button class="action-btn" data-reply-id="reply-{{ comment.id }}" onclick="toggleReply(this)">Reply ▾</button>
+                  <button class="action-btn" onclick="toggleReply('reply-{{ comment.id }}')">Reply ▾</button>
                   <div class="action-divider"></div>
-                  <form method="post" action="{% url 'report_comment' comment.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button class="action-btn" type="submit" title="รายงาน">👎</button>
-                  </form>
+                  {% if comment.author == user %}
+                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                      {% csrf_token %}
+                      <button class="action-btn" type="submit" title="ลบคอมเมนต์">🗑️</button>
+                    </form>
+                  {% else %}
+                    <form method="post" action="{% url 'report_comment' comment.id %}" style="display:inline;">
+                      {% csrf_token %}
+                      <button class="action-btn" type="submit" title="รายงาน">👎</button>
+                    </form>
+                  {% endif %}
                   <div class="stars-display">
-                    <span class="star {% if 1 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
-                    <span class="star {% if 2 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
-                    <span class="star {% if 3 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
-                    <span class="star {% if 4 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
-                    <span class="star {% if 5 <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                    {% for i in stars %}
+                      <span class="star {% if forloop.counter <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                    {% endfor %}
                   </div>
                 </div>
 
@@ -667,19 +708,24 @@
                       </div>
                       <div class="comment-main">
                         <div class="comment-username" style="font-size:0.78rem;">{{ reply.author.username }}</div>
-                        <div class="comment-bubble" style="font-size:0.84rem;">{{ reply.text }}</div>
+                        <div class="comment-bubble {% if reply.author == user %}mine{% endif %}" style="font-size:0.84rem;">{{ reply.text }}</div>
                         <div class="comment-actions">
                           <div class="action-divider"></div>
-                          <form method="post" action="{% url 'report_comment' reply.id %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button class="action-btn" type="submit" title="รายงาน">👎</button>
-                          </form>
+                          {% if reply.author == user %}
+                            <form method="post" action="{% url 'delete_comment' reply.id %}" style="display:inline;">
+                              {% csrf_token %}
+                              <button class="action-btn" type="submit">🗑️</button>
+                            </form>
+                          {% else %}
+                            <form method="post" action="{% url 'report_comment' reply.id %}" style="display:inline;">
+                              {% csrf_token %}
+                              <button class="action-btn" type="submit">👎</button>
+                            </form>
+                          {% endif %}
                           <div class="stars-display">
-                            <span class="star {% if 1 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
-                            <span class="star {% if 2 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
-                            <span class="star {% if 3 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
-                            <span class="star {% if 4 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
-                            <span class="star {% if 5 <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                            {% for i in stars %}
+                              <span class="star {% if forloop.counter <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                            {% endfor %}
                           </div>
                         </div>
                       </div>
@@ -717,52 +763,48 @@
           {% csrf_token %}
           <input type="hidden" name="rating" id="rating-value" value="0" />
           <div class="modal-stars">
-            <span class="modal-star" data-value="1" onclick="setRating(1)">★</span>
-            <span class="modal-star" data-value="2" onclick="setRating(2)">★</span>
-            <span class="modal-star" data-value="3" onclick="setRating(3)">★</span>
-            <span class="modal-star" data-value="4" onclick="setRating(4)">★</span>
-            <span class="modal-star" data-value="5" onclick="setRating(5)">★</span>
+            {% for i in stars %}
+              <span class="modal-star" data-value="{{ forloop.counter }}" onclick="setRating({{ forloop.counter }})">★</span>
+            {% endfor %}
           </div>
         </form>
       </div>
     </div>
 
     <script>
-      function toggleReply(btn) {
-        const id = btn.getAttribute('data-reply-id')
-        const box = document.getElementById(id)
-        box.classList.toggle('open')
-      }
-      
-      function openRating(commentId) {
-        const isAuth = '{{ user.is_authenticated }}' === 'True'
-        if (!isAuth) {
-          window.location = "{% url 'login' %}"
-          return
+        function toggleReply(id) {
+            const box = document.getElementById(id);
+            box.classList.toggle('open');
         }
-        document.getElementById('rating-form').action = '/comment/' + commentId + '/rate/'
-        document.getElementById('rating-value').value = 0
-        document.querySelectorAll('.modal-star').forEach((s) => s.classList.remove('active'))
-        document.getElementById('rating-modal').classList.add('open')
-      }
-      
-      function closeRating() {
-        document.getElementById('rating-modal').classList.remove('open')
-      }
-      
-      function setRating(val) {
-        document.getElementById('rating-value').value = val
-        document.querySelectorAll('.modal-star').forEach((s, i) => {
-          s.classList.toggle('active', i < val)
-        })
-        setTimeout(() => {
-          document.getElementById('rating-form').submit()
-        }, 400)
-      }
-      
-      document.getElementById('rating-modal').addEventListener('click', function (e) {
-        if (e.target === this) closeRating()
-      })
+
+        function openRating(commentId) {
+            {% if not user.is_authenticated %}
+                window.location = "{% url 'login' %}";
+                return;
+            {% endif %}
+            document.getElementById('rating-form').action = '/comment/' + commentId + '/rate/';
+            document.getElementById('rating-value').value = 0;
+            document.querySelectorAll('.modal-star').forEach(s => s.classList.remove('active'));
+            document.getElementById('rating-modal').classList.add('open');
+        }
+
+        function closeRating() {
+            document.getElementById('rating-modal').classList.remove('open');
+        }
+
+        function setRating(val) {
+            document.getElementById('rating-value').value = val;
+            document.querySelectorAll('.modal-star').forEach((s, i) => {
+                s.classList.toggle('active', i < val);
+            });
+            setTimeout(() => {
+                document.getElementById('rating-form').submit();
+            }, 400);
+        }
+
+        document.getElementById('rating-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeRating();
+        });
     </script>
   </body>
 </html>

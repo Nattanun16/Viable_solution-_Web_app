@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Count, Q
-from .models import Problem, Comment
+from .models import Problem, Comment, UserProfile
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -109,6 +109,7 @@ def problem_detail_public(request, problem_id):
         {
             "problem": problem,
             "comments": comments,
+            "stars": range(1, 6),
         },
     )
 
@@ -192,8 +193,9 @@ def sign_up(request):
             email=email,
             password=password,
         )
-        user.profile.faculty = faculty
-        user.profile.save()
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.faculty = faculty
+        profile.save()
         auth_login(request, user)
         messages.success(request, "สมัครสมาชิกสำเร็จ และล็อกอินเข้าสู่ระบบแล้ว")
         return redirect("profile")
@@ -205,9 +207,8 @@ def sign_up(request):
 def profile(request):
     my_problems = Problem.objects.filter(reported_by=request.user)
 
-    profile_photo = None
-    if request.user.profile.photo:
-        profile_photo = request.user.profile.photo.url
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    profile_photo = profile.photo.url if profile.photo else None
 
     return render(
         request,
@@ -217,6 +218,7 @@ def profile(request):
             "score": 0,
             "my_purposes": [],
             "profile_photo": profile_photo,
+            "stars": range(1, 6),
         },
     )
 
@@ -257,8 +259,9 @@ def upload_photo(request):
             except Exception:
                 pass
 
-        request.user.profile.photo = photo
-        request.user.profile.save()
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        profile.photo = photo
+        profile.save()
         return JsonResponse({"success": True})
     return JsonResponse({"success": False})
 
@@ -300,7 +303,15 @@ def define_problem(request):
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
     comments = problem.comments.filter(parent=None).order_by("created_at")
-    return render(request, "problem_detail.html", {"problem": problem, "comments": comments})
+    return render(
+        request,
+        "problem_detail.html",
+        {
+            "problem": problem,
+            "comments": comments,
+            "stars": range(1, 6),
+        },
+    )
 
 
 @login_required(login_url="login")

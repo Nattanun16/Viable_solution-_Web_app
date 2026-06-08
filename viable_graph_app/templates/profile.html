@@ -675,7 +675,7 @@
                 <div class="purpose-item-header">
                   <span class="purpose-title">{{ purpose.title }}</span>
                   <span class="stars">
-                    {% for i in 12345 %}
+                    {% for i in stars %}
                       {% if forloop.counter <= purpose.rating %}
                         ★
                       {% else %}
@@ -761,29 +761,29 @@
           alert('กรุณาเลือกรูปก่อน')
           return
         }
-
+      
         const fileInput = document.getElementById('photo-file-input')
         if (!fileInput.files || !fileInput.files[0]) {
           alert('กรุณาเลือกรูปก่อน')
           return
         }
-
+      
         // แสดง loading บนปุ่ม Continue
         const btn = document.querySelector('.modal-continue-btn')
         btn.disabled = true
         btn.textContent = 'กำลังตรวจสอบ...'
-
+      
         const formData = new FormData()
         formData.append('photo', fileInput.files[0])
         formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
-
+      
         try {
           const res = await fetch('{% url "upload_photo" %}', {
             method: 'POST',
             body: formData
           })
           const data = await res.json()
-
+      
           if (data.success) {
             // ✅ ผ่านการตรวจสอบ → อัปเดต avatar
             const avatarImg = document.getElementById('avatar-img')
@@ -805,31 +805,41 @@
         }
       }
     </script>
-  
-  <!-- Toast notification สำหรับลบปัญหา -->
-  {% if request.GET.deleted %}
-  <div id="delete-toast" style="
+
+    <!-- Toast notification สำหรับลบปัญหา -->
+    {% if request.GET.deleted %}
+      <div id="delete-toast" style="
     position:fixed; bottom:2rem; left:50%; transform:translateX(-50%);
     background:#1a1a2e; color:#fff; padding:0.9rem 2rem;
     border-radius:50px; font-size:1rem; font-weight:600;
     box-shadow:0 8px 30px rgba(0,0,0,0.3);
     z-index:9999; display:flex; align-items:center; gap:0.6rem;
     animation: slideUp 0.3s ease;
-  ">
-    ✅ ลบปัญหาเรียบร้อยแล้ว
-  </div>
-  <style>
-    @keyframes slideUp {
-      from { opacity:0; transform:translateX(-50%) translateY(20px); }
-      to   { opacity:1; transform:translateX(-50%) translateY(0); }
-    }
-  </style>
-  <script>
-    setTimeout(function() {
-      var t = document.getElementById('delete-toast');
-      if (t) { t.style.transition='opacity 0.5s'; t.style.opacity='0'; setTimeout(function(){ t.remove(); }, 500); }
-    }, 3000);
-  </script>
-  {% endif %}
-</body>
+  ">✅ ลบปัญหาเรียบร้อยแล้ว</div>
+      <style>
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+      </style>
+      <script>
+        setTimeout(function () {
+          var t = document.getElementById('delete-toast')
+          if (t) {
+            t.style.transition = 'opacity 0.5s'
+            t.style.opacity = '0'
+            setTimeout(function () {
+              t.remove()
+            }, 500)
+          }
+        }, 3000)
+      </script>
+    {% endif %}
+  </body>
 </html>

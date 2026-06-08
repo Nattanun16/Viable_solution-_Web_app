@@ -98,7 +98,7 @@
             <label class="form-label">ประเภทปัญหา</label>
             <select class="form-control" name="category">
               {% for value, label in problem.CATEGORY_CHOICES %}
-                <option value="{{ value }}" {% if problem.category == value %}selected{% endif %}>{{ label }}</option>
+              <option value="{{ value }}" {% if problem.category == value %}selected{% endif %}>{{ label }}</option>
               {% endfor %}
             </select>
           </div>
