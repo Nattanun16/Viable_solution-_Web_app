@@ -233,7 +233,9 @@ def upload_photo(request):
             image_data = base64.b64encode(photo.read()).decode("utf-8")
             photo.seek(0)
 
-            vision_url = f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
+            vision_url = (
+                f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
+            )
             payload = {
                 "requests": [
                     {
@@ -245,7 +247,9 @@ def upload_photo(request):
             try:
                 vision_response = requests.post(vision_url, json=payload, timeout=10)
                 result = vision_response.json()
-                annotations = result.get("responses", [{}])[0].get("safeSearchAnnotation", {})
+                annotations = result.get("responses", [{}])[0].get(
+                    "safeSearchAnnotation", {}
+                )
                 UNSAFE_LEVELS = {"LIKELY", "VERY_LIKELY"}
                 CHECKS = {
                     "adult": "เนื้อหาลามกอนาจาร",
@@ -255,7 +259,9 @@ def upload_photo(request):
                 }
                 for field, label in CHECKS.items():
                     if annotations.get(field, "UNKNOWN") in UNSAFE_LEVELS:
-                        return JsonResponse({"success": False, "reason": f"ภาพถูกปฏิเสธ: พบ{label}"})
+                        return JsonResponse(
+                            {"success": False, "reason": f"ภาพถูกปฏิเสธ: พบ{label}"}
+                        )
             except Exception:
                 pass
 
@@ -585,3 +591,67 @@ def delete_problem(request, problem_id):
         return redirect("profile")
 
     return redirect("problem_detail_public", problem_id=problem_id)
+
+
+def solution_chart_data(request):
+    category_name = request.GET.get("category", "")
+
+    # แปลงชื่อภาษาไทยกลับเป็น key
+    category_map = {v: k for k, v in dict(Problem.CATEGORY_CHOICES).items()}
+    category_key = category_map.get(category_name, "")
+
+    # นับ comments แยกตามปัญหาในหมวดนั้น
+    problems = Problem.objects.filter(category=category_key)
+    data = []
+    for p in problems:
+        count = Comment.objects.filter(problem=p).count()
+        if count > 0:
+            data.append({"label": p.title, "val": count})
+
+    # ถ้ายังไม่มี comment ให้แสดงปัญหาทั้งหมดในหมวดนั้น
+    if not data:
+        for p in problems:
+            data.append({"label": p.title, "val": 0})
+
+    data.sort(key=lambda x: x["val"], reverse=True)
+
+    return JsonResponse(
+        {
+            "labels": [d["label"] for d in data],
+            "data": [d["val"] for d in data],
+        }
+    )
+
+
+def problems_ranked(request):
+    """ส่งรายชื่อปัญหาทั้งหมดเรียงตามจำนวน comment"""
+    problems = Problem.objects.annotate(comment_count=Count("comments")).order_by(
+        "-comment_count"
+    )
+    return JsonResponse(
+        {
+            "problems": [
+                {"id": p.id, "title": p.title, "count": p.comment_count}
+                for p in problems
+            ]
+        }
+    )
+
+
+def problem_solutions_data(request):
+    """ส่ง comments ของปัญหาหนึ่งๆ เพื่อแสดงเป็นกราฟวิธีแก้"""
+    problem_id = request.GET.get("problem_id", "")
+    try:
+        problem = Problem.objects.get(id=problem_id)
+    except Problem.DoesNotExist:
+        return JsonResponse({"labels": [], "data": [], "details": []})
+
+    comments = Comment.objects.filter(problem=problem, parent=None).order_by("-rating")
+    labels, data, details = [], [], []
+    for c in comments:
+        short_text = c.text[:20] + "..." if len(c.text) > 20 else c.text
+        labels.append(short_text)
+        data.append(c.rating if c.rating > 0 else 1)
+        details.append({"text": c.text, "rating": c.rating})
+
+    return JsonResponse({"labels": labels, "data": data, "details": details})

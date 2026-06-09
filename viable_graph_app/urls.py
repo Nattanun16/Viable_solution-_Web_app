@@ -17,7 +17,9 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("reset_pass/", views.reset_pass, name="reset_password"),
     path("upload-photo/", views.upload_photo, name="upload_photo"),
-    path("api/check-image-safety/", views.check_image_safety, name="check_image_safety"),
+    path(
+        "api/check-image-safety/", views.check_image_safety, name="check_image_safety"
+    ),
     # แก้บัค #1: ใช้ problem_detail_public เป็น URL หลักสำหรับดูปัญหา
     # problem_detail (private) ยังคงไว้สำหรับ compatibility แต่ชี้ไป view เดียวกัน
     path("problem/<int:problem_id>/", views.problem_detail, name="problem_detail"),
@@ -28,8 +30,21 @@ urlpatterns = [
     ),
     path("problem/<int:problem_id>/comment/", views.add_comment, name="add_comment"),
     path("comment/<int:comment_id>/rate/", views.rate_comment, name="rate_comment"),
-    path("comment/<int:comment_id>/report/", views.report_comment, name="report_comment"),
-    path("comment/<int:comment_id>/delete/", views.delete_comment, name="delete_comment"),
+    path(
+        "comment/<int:comment_id>/report/", views.report_comment, name="report_comment"
+    ),
+    path(
+        "comment/<int:comment_id>/delete/", views.delete_comment, name="delete_comment"
+    ),
     path("problem/<int:problem_id>/edit/", views.edit_problem, name="edit_problem"),
-    path("problem/<int:problem_id>/delete/", views.delete_problem, name="delete_problem"),
+    path(
+        "problem/<int:problem_id>/delete/", views.delete_problem, name="delete_problem"
+    ),
+    path("api/solutions/", views.solution_chart_data, name="solution_chart_data"),
+    path("api/problems-ranked/", views.problems_ranked, name="problems_ranked"),
+    path(
+        "api/problem-solutions/",
+        views.problem_solutions_data,
+        name="problem_solutions_data",
+    ),
 ]

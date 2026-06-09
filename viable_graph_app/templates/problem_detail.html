@@ -317,7 +317,7 @@
       
       .comment-bubble.mine {
         background: rgba(255, 240, 200, 0.7);
-        text-align: right;
+        text-align: left;
       }
       
       .comment-actions {
@@ -610,12 +610,12 @@
             {% if problem.incident_date %}
               <div style="margin-bottom: 0.6rem;">
                 <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📅 วันที่เกิดเหตุ:</span>
-                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.incident_date|date:"d/m/Y" }}</span>
+                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.incident_date|date:'d/m/Y' }}</span>
               </div>
             {% endif %}
             <div style="margin-bottom: 0.6rem;">
               <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">⏱️ วันที่สร้าง:</span>
-              <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.created_at|date:"d/m/Y H:i" }}</span>
+              <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.created_at|date:'d/m/Y H:i' }}</span>
             </div>
           </div>
 
@@ -633,13 +633,13 @@
         </div>
 
         {% if problem.reported_by == user %}
-        <div class="problem-actions">
-          <a href="{% url 'edit_problem' problem.id %}" class="btn-edit">✏️ แก้ไข</a>
-          <form method="post" action="{% url 'delete_problem' problem.id %}" style="display:inline;" onsubmit="return confirm('คุณแน่ใจหรือว่าต้องการลบปัญหานี้?');">
-            {% csrf_token %}
-            <button type="submit" class="btn-delete">🗑️ ลบ</button>
-          </form>
-        </div>
+          <div class="problem-actions">
+            <a href="{% url 'edit_problem' problem.id %}" class="btn-edit">✏️ แก้ไข</a>
+            <form method="post" action="{% url 'delete_problem' problem.id %}" style="display:inline;" onsubmit="return confirm('คุณแน่ใจหรือว่าต้องการลบปัญหานี้?');">
+              {% csrf_token %}
+              <button type="submit" class="btn-delete">🗑️ ลบ</button>
+            </form>
+          </div>
         {% endif %}
       </div>
 
@@ -666,12 +666,8 @@
                 <div class="comment-actions">
                   <button class="action-btn" onclick="toggleReply('reply-{{ comment.id }}')">Reply ▾</button>
                   <div class="action-divider"></div>
+
                   {% if comment.author == user %}
-                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
-                      {% csrf_token %}
-                      <button class="action-btn" type="submit" title="ลบคอมเมนต์">🗑️</button>
-                    </form>
-                  {% else %}
                     <form method="post" action="{% url 'report_comment' comment.id %}" style="display:inline;">
                       {% csrf_token %}
                       <button class="action-btn" type="submit" title="รายงาน">👎</button>
@@ -711,15 +707,14 @@
                         <div class="comment-bubble {% if reply.author == user %}mine{% endif %}" style="font-size:0.84rem;">{{ reply.text }}</div>
                         <div class="comment-actions">
                           <div class="action-divider"></div>
+                          <form method="post" action="{% url 'report_comment' reply.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="action-btn" type="submit" title="รายงาน">👎</button>
+                          </form>
                           {% if reply.author == user %}
                             <form method="post" action="{% url 'delete_comment' reply.id %}" style="display:inline;">
                               {% csrf_token %}
                               <button class="action-btn" type="submit">🗑️</button>
-                            </form>
-                          {% else %}
-                            <form method="post" action="{% url 'report_comment' reply.id %}" style="display:inline;">
-                              {% csrf_token %}
-                              <button class="action-btn" type="submit">👎</button>
                             </form>
                           {% endif %}
                           <div class="stars-display">

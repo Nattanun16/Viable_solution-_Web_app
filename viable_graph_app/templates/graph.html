@@ -1,170 +1,519 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>กราฟสถิติปัญหา – Viable Graph</title>
   {% load static %}
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+
     body {
       font-family: 'Outfit', sans-serif;
-      background: #0a0a0f;
-      color: white;
       min-height: 100vh;
+      background: linear-gradient(160deg, #ffb3d9 0%, #e0c0ff 50%, #c8b0ff 100%);
+      color: #1a1a1a;
     }
+
+    /* NAVBAR */
     .navbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 2.5rem;
-      background: rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 1.2rem 2.5rem;
     }
+
     .navbar-brand {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
-      color: #fff;
+      font-size: 2.8rem;
+      letter-spacing: 0.06em;
       text-decoration: none;
-      letter-spacing: 0.06em;
+      background: linear-gradient(90deg, #fff 30%, #ffb3d9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
-    .nav-links a:hover { color: #fff; }
 
-    .page-wrap {
-      max-width: 900px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+
+    .nav-links a {
+      color: #1a1a1a;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: color 0.2s;
     }
-    h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.5rem;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.5rem;
-      color: #fff;
+
+    .nav-links a:hover,
+    .nav-links a.active { text-decoration: underline; text-underline-offset: 4px; }
+
+    /* MAIN */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      padding: 1rem 2.5rem 3rem;
     }
-    .subtitle {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.95rem;
-      margin-bottom: 2.5rem;
-    }
+
     .chart-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: #ffffff;
+      border: 2px solid #1a1a1a;
       border-radius: 20px;
-      padding: 2rem;
-      margin-bottom: 2rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
     }
-    .chart-card h2 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: rgba(255,255,255,0.85);
+
+    .chart-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(212,0,122,0.15);
     }
-    .loading {
+
+    .chart-card::after {
+      content: '🔍 คลิกเพื่อดูรายละเอียด';
+      position: absolute;
+      bottom: 0.6rem;
+      right: 1rem;
+      font-size: 0.75rem;
+      color: rgba(212,0,122,0.5);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem 2.5rem;
+      width: min(900px, 95vw);
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: popIn 0.2s ease both;
+    }
+
+    @keyframes popIn {
+      from { opacity:0; transform:scale(0.92); }
+      to   { opacity:1; transform:scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      font-size: 1.6rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #333;
+      line-height: 1;
+    }
+
+    .modal-title {
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.4rem;
+      color: #1a1a1a;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* TABLE */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .data-table th {
+      background: #ffe0a0;
+      padding: 0.65rem 1rem;
       text-align: center;
-      color: rgba(255,255,255,0.4);
-      padding: 3rem 0;
-      font-size: 0.95rem;
+      font-weight: 700;
+      border: 1.5px solid #e8a000;
+    }
+
+    .data-table td {
+      padding: 0.6rem 1rem;
+      text-align: center;
+      border: 1.5px solid #f0c060;
+    }
+
+    .data-table tr:hover td { background: #fff8e0; }
+
+    .data-table td.problem-link {
+      text-align: left;
+      cursor: pointer;
+      color: #d4007a;
+      font-weight: 500;
+    }
+
+    .data-table td.problem-link:hover { text-decoration: underline; }
+
+    /* PIE TABLE */
+    .pie-table th {
+      background: #ffd0e8;
+      border-color: #d4007a;
+    }
+
+    .pie-table td { border-color: #ffb3d9; }
+
+    /* Back button in modal */
+    .modal-back {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      background: none;
+      border: none;
+      color: #d4007a;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      padding: 0;
+    }
+
+    .modal-back.show { display: flex; }
+    .modal-back:hover { opacity: 0.7; }
+
+    @media (max-width: 640px) {
+      .charts-row { grid-template-columns: 1fr; }
+      .modal-body { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a class="navbar-brand" href="{% url 'home' %}">Viable Graph</a>
     <ul class="nav-links">
       <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'propose_solution' %}">ปัญหาทั้งหมด</a></li>
-      <li><a href="{% url 'graph' %}">กราฟ</a></li>
+      <li><a href="{% url 'propose_solution' %}">Purpose</a></li>
+      <li><a href="{% url 'graph' %}" class="active">กราฟ</a></li>
       {% if user.is_authenticated %}
-        <li><a href="{% url 'profile' %}">โปรไฟล์</a></li>
-        <li><a href="{% url 'logout' %}">ออกจากระบบ</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+        <li><a href="{% url 'logout' %}">Log Out</a></li>
       {% else %}
-        <li><a href="{% url 'login' %}">เข้าสู่ระบบ</a></li>
+        <li><a href="{% url 'login' %}">Log In</a></li>
       {% endif %}
     </ul>
   </nav>
 
-  <div class="page-wrap">
-    <h1>สถิติปัญหา</h1>
-    <p class="subtitle">ภาพรวมปัญหาที่รายงานเข้าระบบ แยกตามหมวดหมู่</p>
-
-    <div class="chart-card">
-      <h2>📊 จำนวนปัญหาแยกตามหมวดหมู่</h2>
-      <canvas id="barChart" height="120"></canvas>
-      <div class="loading" id="bar-loading">กำลังโหลด...</div>
+  <!-- CHARTS -->
+  <div class="charts-row">
+    <div class="chart-card" onclick="openBarModal()">
+      <canvas id="barChart"></canvas>
     </div>
+    <div class="chart-card" onclick="openPieModal()">
+      <canvas id="pieChart"></canvas>
+    </div>
+  </div>
 
-    <div class="chart-card">
-      <h2>🥧 สัดส่วนปัญหาแยกประเภท</h2>
-      <canvas id="pieChart" height="120"></canvas>
-      <div class="loading" id="pie-loading">กำลังโหลด...</div>
+  <!-- BAR MODAL -->
+  <div class="modal-overlay" id="bar-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('bar-modal')">✕</button>
+      <button class="modal-back" id="bar-back" onclick="showBarMain()">&#8592; กลับ</button>
+      <div class="modal-title" id="bar-modal-title">กราฟแท่งแสดงจำนวนปัญหาในแต่ละหมวดหมู่</div>
+
+      <!-- Main bar view -->
+      <div id="bar-main-view">
+        <div class="modal-body">
+          <div>
+            <canvas id="modal-bar-chart"></canvas>
+          </div>
+          <div>
+            <table class="data-table" id="bar-table">
+              <thead>
+                <tr>
+                  <th>ลำดับ</th>
+                  <th>ชื่อปัญหา</th>
+                </tr>
+              </thead>
+              <tbody id="bar-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solution bar view (drilldown) -->
+      <div id="bar-solution-view" style="display:none;">
+        <div class="modal-body">
+          <div>
+            <canvas id="modal-solution-chart"></canvas>
+          </div>
+          <div style="font-size:0.88rem; color:#888; padding-top:1rem;">
+            กราฟแสดงจำนวนวิธีแก้ที่นิสิตเสนอมาในแต่ละแนวทาง
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <table class="data-table" id="solution-table">
+            <thead>
+              <tr>
+                <th>ลำดับ</th>
+                <th>ความคิดเห็น / วิธีแก้</th>
+                <th>คะแนน</th>
+              </tr>
+            </thead>
+            <tbody id="solution-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PIE MODAL -->
+  <div class="modal-overlay" id="pie-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal('pie-modal')">✕</button>
+      <div class="modal-title">สัดส่วนปัญหาประเภทต่างๆ</div>
+      <div class="modal-body">
+        <div>
+          <table class="data-table pie-table" id="pie-table">
+            <thead>
+              <tr>
+                <th>ประเภท</th>
+                <th>สัดส่วนของปัญหา (%)</th>
+              </tr>
+            </thead>
+            <tbody id="pie-table-body"></tbody>
+          </table>
+        </div>
+        <div>
+          <canvas id="modal-pie-chart"></canvas>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    async function loadCharts() {
+    const COLORS = ['#e91e8c','#c084fc','#60a5fa','#fbbf24','#34d399','#f97316','#a78bfa'];
+    let chartData = { labels:[], data:[] };
+    let modalBarChart = null, modalPieChart = null, modalSolChart = null;
+
+    // ── Load main charts ──
+    async function init() {
       try {
         const res = await fetch("{% url 'chart_data' %}");
-        const data = await res.json();
-
-        document.getElementById('bar-loading').style.display = 'none';
-        document.getElementById('pie-loading').style.display = 'none';
-
-        const colors = [
-          '#ff6b9d', '#c77dff', '#4cc9f0', '#f4d03f',
-          '#56c596', '#ff9f43',
-        ];
-
-        new Chart(document.getElementById('barChart'), {
-          type: 'bar',
-          data: {
-            labels: data.labels,
-            datasets: [{
-              label: 'จำนวนปัญหา',
-              data: data.data,
-              backgroundColor: colors,
-              borderRadius: 8,
-              borderSkipped: false,
-            }]
-          },
-          options: {
-            plugins: { legend: { display: false } },
-            scales: {
-              x: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-              y: { ticks: { color: 'rgba(255,255,255,0.7)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } },
-            }
-          }
-        });
-
-        new Chart(document.getElementById('pieChart'), {
-          type: 'doughnut',
-          data: {
-            labels: data.labels,
-            datasets: [{
-              data: data.data,
-              backgroundColor: colors,
-              borderWidth: 2,
-              borderColor: '#0a0a0f',
-            }]
-          },
-          options: {
-            plugins: {
-              legend: { labels: { color: 'rgba(255,255,255,0.8)', padding: 16, font: { size: 13 } } }
-            }
-          }
-        });
-      } catch (e) {
-        document.getElementById('bar-loading').textContent = 'โหลดข้อมูลไม่สำเร็จ';
-        document.getElementById('pie-loading').textContent = 'โหลดข้อมูลไม่สำเร็จ';
-      }
+        chartData = await res.json();
+        renderMainBar();
+        renderMainPie();
+      } catch(e) { console.error(e); }
     }
-    loadCharts();
+
+    function renderMainBar() {
+      new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+          labels: chartData.labels,
+          datasets: [{ label:'จำนวนปัญหา', data: chartData.data,
+            backgroundColor: '#e91e8c', borderRadius: 6, borderSkipped: false }]
+        },
+        options: {
+          plugins: { legend:{ display:false },
+            title:{ display:true, text:'จำนวนปัญหา', align:'start', color:'#333', font:{size:13} }
+          },
+          scales: {
+            x: { ticks:{ color:'#333', maxRotation:30 }, grid:{ display:false },
+              title:{ display:true, text:'หมวดหมู่', color:'#555' } },
+            y: { ticks:{ color:'#333', stepSize:1 }, grid:{ color:'rgba(0,0,0,0.06)' } }
+          }
+        }
+      });
+    }
+
+    function renderMainPie() {
+      new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+          labels: chartData.labels,
+          datasets: [{ data: chartData.data, backgroundColor: COLORS,
+            borderWidth:2, borderColor:'#fff' }]
+        },
+        options: {
+          plugins: {
+            legend: { position:'right', labels:{ color:'#333', padding:12, font:{size:12} } }
+          }
+        }
+      });
+    }
+
+    // ── Bar Modal ──
+    async function openBarModal() {
+    showBarMain();
+    document.getElementById('bar-modal').classList.add('open');
+
+    // โหลดรายชื่อปัญหาจริงๆ
+    const res = await fetch('/api/problems-ranked/');
+    const ranked = await res.json();
+
+    // สร้างตาราง
+    const tbody = document.getElementById('bar-table-body');
+    tbody.innerHTML = '';
+    ranked.problems.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td class="problem-link" 
+                onclick="showSolutions('${item.title.replace(/'/g, "\\'")}', ${item.id})">
+                ${item.title}
+            </td>`;
+        tbody.appendChild(tr);
+    });
+
+    // กราฟหมวดหมู่ด้านซ้าย
+    if (modalBarChart) modalBarChart.destroy();
+    modalBarChart = new Chart(document.getElementById('modal-bar-chart'), {
+        type: 'bar',
+        data: {
+            labels: chartData.labels,
+            datasets: [{ label: 'จำนวนปัญหา', data: chartData.data,
+                backgroundColor: '#e91e8c', borderRadius: 6, borderSkipped: false }]
+        },
+        options: {
+            plugins: { legend: { display: false },
+                title: { display: true, text: 'จำนวนปัญหา', align: 'start', color: '#333' }
+            },
+            scales: {
+                x: { ticks: { color: '#333', maxRotation: 30 }, grid: { display: false },
+                    title: { display: true, text: 'หมวดหมู่', color: '#555' } },
+                y: { ticks: { color: '#333', stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.06)' } }
+            }
+        }
+    });
+}
+
+async function showSolutions(problemName, problemId) {
+    document.getElementById('bar-main-view').style.display = 'none';
+    document.getElementById('bar-solution-view').style.display = 'block';
+    document.getElementById('bar-modal-title').textContent = `วิธีแก้: ${problemName}`;
+    document.getElementById('bar-back').classList.add('show');
+
+    try {
+        const res = await fetch(`/api/problem-solutions/?problem_id=${problemId}`);
+        const solData = await res.json();
+
+        if (modalSolChart) modalSolChart.destroy();
+        modalSolChart = new Chart(document.getElementById('modal-solution-chart'), {
+            type: 'bar',
+            data: {
+                labels: solData.labels,
+                datasets: [{ label: 'จำนวนวิธีแก้ที่คล้ายกัน', data: solData.data,
+                    backgroundColor: '#e91e8c', borderRadius: 6, borderSkipped: false }]
+            },
+            options: {
+                plugins: { legend: { display: false },
+                    title: { display: true, text: 'จำนวนวิธีแก้ที่คล้ายกัน', align: 'start', color: '#333' }
+                },
+                scales: {
+                    x: { ticks: { color: '#333', maxRotation: 30 }, grid: { display: false },
+                        title: { display: true, text: 'วิธีแก้', color: '#555' } },
+                    y: { ticks: { color: '#333', stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.06)' } }
+                }
+            }
+        });
+
+        const tbody = document.getElementById('solution-table-body');
+        tbody.innerHTML = '';
+        if (solData.details && solData.details.length > 0) {
+            solData.details.forEach((item, idx) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${idx + 1}</td>
+                    <td style="text-align:left;">${item.text}</td>
+                    <td>${item.rating > 0 ? item.rating : '-'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td colspan="3">ไม่มีความคิดเห็นหรือวิธีแก้ในขณะนี้</td>';
+            tbody.appendChild(row);
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+    function showBarMain() {
+      document.getElementById('bar-main-view').style.display = 'block';
+      document.getElementById('bar-solution-view').style.display = 'none';
+      document.getElementById('bar-modal-title').textContent = 'กราฟแท่งแสดงจำนวนปัญหาในแต่ละหมวดหมู่';
+      document.getElementById('bar-back').classList.remove('show');
+    }
+
+    // ── Pie Modal ──
+    function openPieModal() {
+      document.getElementById('pie-modal').classList.add('open');
+
+      const total = chartData.data.reduce((a,b)=>a+b,0);
+      const tbody = document.getElementById('pie-table-body');
+      tbody.innerHTML = '';
+      chartData.labels.forEach((label, i) => {
+        const pct = total > 0 ? ((chartData.data[i]/total)*100).toFixed(1) : 0;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${label}</td><td>${pct}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      if (modalPieChart) modalPieChart.destroy();
+      modalPieChart = new Chart(document.getElementById('modal-pie-chart'), {
+        type: 'doughnut',
+        data: {
+          labels: chartData.labels,
+          datasets: [{ data: chartData.data, backgroundColor: COLORS,
+            borderWidth:2, borderColor:'#fff' }]
+        },
+        options: {
+          plugins: {
+            legend:{ position:'right', labels:{ color:'#333', padding:10, font:{size:11} } },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const pct = total > 0 ? ((ctx.parsed/total)*100).toFixed(1) : 0;
+                  return ` ${ctx.label}: ${pct}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    // Close on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); });
+    });
+
+    init();
   </script>
 </body>
 </html>
