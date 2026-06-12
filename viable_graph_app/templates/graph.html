@@ -274,7 +274,8 @@
             <thead>
               <tr>
                 <th>ลำดับ</th>
-                <th>ความคิดเห็น / วิธีแก้</th>
+                <th>ความคิดเห็น / วิธีแก้ (ตัวแทนกลุ่ม)</th>
+                <th title="จำนวน comment ที่มีความหมายคล้ายกันถูกรวมเข้ากลุ่มนี้">คนเสนอ</th>
                 <th>คะแนน</th>
               </tr>
             </thead>
@@ -441,23 +442,61 @@ async function showSolutions(problemName, problemId) {
         tbody.innerHTML = '';
         if (solData.details && solData.details.length > 0) {
             solData.details.forEach((item, idx) => {
+                // แถวหลัก: ตัวแทนกลุ่ม
                 const row = document.createElement('tr');
+                const hasMembers = item.members && item.members.length > 1;
                 row.innerHTML = `
                     <td>${idx + 1}</td>
-                    <td style="text-align:left;">${item.text}</td>
+                    <td style="text-align:left;">
+                        ${hasMembers
+                            ? `<button class="cluster-toggle" onclick="toggleCluster(this)" style="background:none;border:none;cursor:pointer;font-size:0.85rem;color:#e91e8c;margin-right:6px;" title="ดู comment ทั้งหมดในกลุ่ม">▶</button>`
+                            : ''}
+                        ${item.text}
+                    </td>
+                    <td style="text-align:center;">
+                        ${hasMembers
+                            ? `<span title="${item.members.join('\n')}" style="cursor:help;background:#fce4f3;color:#c0006a;padding:2px 8px;border-radius:12px;font-size:0.82rem;font-weight:600;">${item.count} คน</span>`
+                            : `<span style="color:#aaa;font-size:0.82rem;">1 คน</span>`}
+                    </td>
                     <td>${item.rating > 0 ? item.rating : '-'}</td>
                 `;
                 tbody.appendChild(row);
+
+                // แถวขยาย: แสดง comment สมาชิกทั้งหมดในกลุ่ม (ซ่อนไว้ก่อน)
+                if (hasMembers) {
+                    const detailRow = document.createElement('tr');
+                    detailRow.className = 'cluster-detail-row';
+                    detailRow.style.display = 'none';
+                    const memberList = item.members
+                        .map((m, i) => `<li style="padding:3px 0;color:#555;">${i + 1}. ${m}</li>`)
+                        .join('');
+                    detailRow.innerHTML = `
+                        <td colspan="4" style="background:#fdf0f8;padding:10px 20px;">
+                            <ul style="margin:0;padding-left:16px;list-style:none;">${memberList}</ul>
+                        </td>
+                    `;
+                    tbody.appendChild(detailRow);
+                }
             });
         } else {
             const row = document.createElement('tr');
-            row.innerHTML = '<td colspan="3">ไม่มีความคิดเห็นหรือวิธีแก้ในขณะนี้</td>';
+            row.innerHTML = '<td colspan="4">ไม่มีความคิดเห็นหรือวิธีแก้ในขณะนี้</td>';
             tbody.appendChild(row);
         }
     } catch(e) {
         console.error(e);
     }
 }
+
+    function toggleCluster(btn) {
+      // หา detail row ที่อยู่ถัดจาก row ของปุ่มนี้
+      const mainRow = btn.closest('tr');
+      const detailRow = mainRow.nextElementSibling;
+      if (!detailRow || !detailRow.classList.contains('cluster-detail-row')) return;
+      const isOpen = detailRow.style.display !== 'none';
+      detailRow.style.display = isOpen ? 'none' : 'table-row';
+      btn.textContent = isOpen ? '▶' : '▼';
+    }
 
     function showBarMain() {
       document.getElementById('bar-main-view').style.display = 'block';

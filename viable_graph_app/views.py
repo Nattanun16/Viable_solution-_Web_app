@@ -588,19 +588,37 @@ def problems_ranked(request):
 
 
 def problem_solutions_data(request):
-    """ส่ง comments ของปัญหาหนึ่งๆ เพื่อแสดงเป็นกราฟวิธีแก้"""
+    """
+    ส่ง comments ของปัญหาหนึ่งๆ เพื่อแสดงเป็นกราฟวิธีแก้
+    ถ้ามีโมเดล embedding พร้อม จะจัดกลุ่ม comment ที่มีความหมายคล้ายกันก่อน
+    """
     problem_id = request.GET.get("problem_id", "")
     try:
         problem = Problem.objects.get(id=problem_id)
     except Problem.DoesNotExist:
         return JsonResponse({"labels": [], "data": [], "details": []})
 
-    comments = Comment.objects.filter(problem=problem, parent=None).order_by("-rating")
-    labels, data, details = [], [], []
-    for c in comments:
-        short_text = c.text[:20] + "..." if len(c.text) > 20 else c.text
-        labels.append(short_text)
-        data.append(c.rating if c.rating > 0 else 1)
-        details.append({"text": c.text, "rating": c.rating})
+    comments = list(
+        Comment.objects.filter(problem=problem, parent=None).order_by("-rating")
+    )
+
+    if not comments:
+        return JsonResponse({"labels": [], "data": [], "details": []})
+
+    # ── จัดกลุ่มด้วย clustering module ──
+    from . import clustering
+    groups = clustering.cluster_comments(comments)
+
+    labels = [g["short_label"] for g in groups]
+    data   = [g["bar_value"]   for g in groups]
+    details = [
+        {
+            "text":        g["representative"],   # ข้อความตัวแทนกลุ่ม
+            "rating":      g["total_rating"],      # rating รวมของกลุ่ม
+            "count":       g["count"],             # จำนวน comment ที่รวมกัน
+            "members":     g["members"],           # รายการ comment ทั้งหมดในกลุ่ม
+        }
+        for g in groups
+    ]
 
     return JsonResponse({"labels": labels, "data": data, "details": details})
