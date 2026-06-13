@@ -4,9 +4,12 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y build-essential l
 
 WORKDIR /app
 
-COPY . /app
-
+# ✅ copy requirements ก่อน แล้วค่อย pip install
+COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+
+# ✅ copy โค้ดทีหลัง — แก้ .py .html จะไม่ทำให้ pip install ซ้ำ
+COPY . /app
 
 RUN python viable_graph_project/manage.py collectstatic --noinput || true
 

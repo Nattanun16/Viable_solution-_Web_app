@@ -14,6 +14,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from .vision import check_image_safety as vision_check
+from django.core.cache import cache
 import base64
 import json
 
@@ -588,15 +589,18 @@ def problems_ranked(request):
 
 
 def problem_solutions_data(request):
-    """
-    ส่ง comments ของปัญหาหนึ่งๆ เพื่อแสดงเป็นกราฟวิธีแก้
-    ถ้ามีโมเดล embedding พร้อม จะจัดกลุ่ม comment ที่มีความหมายคล้ายกันก่อน
-    """
     problem_id = request.GET.get("problem_id", "")
     try:
         problem = Problem.objects.get(id=problem_id)
     except Problem.DoesNotExist:
         return JsonResponse({"labels": [], "data": [], "details": []})
+
+    # ดึงจาก cache ก่อน (เก็บไว้ 10 นาที)
+    from django.core.cache import cache
+    cache_key = f"solutions_grouped_{problem_id}"
+    cached = cache.get(cache_key)
+    if cached:
+        return JsonResponse(cached)
 
     comments = list(
         Comment.objects.filter(problem=problem, parent=None).order_by("-rating")
@@ -613,12 +617,14 @@ def problem_solutions_data(request):
     data   = [g["bar_value"]   for g in groups]
     details = [
         {
-            "text":        g["representative"],   # ข้อความตัวแทนกลุ่ม
-            "rating":      g["total_rating"],      # rating รวมของกลุ่ม
-            "count":       g["count"],             # จำนวน comment ที่รวมกัน
-            "members":     g["members"],           # รายการ comment ทั้งหมดในกลุ่ม
+            "text":    g["representative"],
+            "rating":  g["total_rating"],
+            "count":   g["count"],
+            "members": g["members"],
         }
         for g in groups
     ]
 
-    return JsonResponse({"labels": labels, "data": data, "details": details})
+    result = {"labels": labels, "data": data, "details": details}
+    cache.set(cache_key, result, timeout=600)
+    return JsonResponse(result)

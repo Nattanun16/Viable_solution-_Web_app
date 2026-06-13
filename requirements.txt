@@ -5,6 +5,3 @@ mysql-connector-python==8.1.0
 requests==2.31.0
 django-recaptcha
 Pillow
-numpy==1.26.4
-scikit-learn==1.5.1
-sentence-transformers==3.0.1
