@@ -1,0 +1,7 @@
+{
+  "typeCheckingMode": "basic",
+  "reportMissingTypeStubs": false,
+  "exclude": ["**/migrations", "**/staticfiles", "**/node_modules"],
+  "include": ["viable_graph_app"],
+  "venvPath": "."
+}

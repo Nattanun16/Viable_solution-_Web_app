@@ -104,7 +104,9 @@ def favicon(request):
 
 def problem_detail_public(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
-    comments = problem.comments.filter(parent=None).order_by("created_at")
+    comments = Comment.objects.filter(problem=problem, parent=None).order_by(
+        "created_at"
+    )
     return render(
         request,
         "problem_detail.html",
@@ -285,7 +287,9 @@ def define_problem(request):
 @login_required(login_url="login")
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
-    comments = problem.comments.filter(parent=None).order_by("created_at")
+    comments = Comment.objects.filter(problem=problem, parent=None).order_by(
+        "created_at"
+    )
     return render(
         request,
         "problem_detail.html",
@@ -315,31 +319,41 @@ def add_comment(request, problem_id):
 
 @login_required(login_url="login")
 def rate_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
     if request.method == "POST":
-        comment = get_object_or_404(Comment, id=comment_id)
-        rating = int(request.POST.get("rating", 0))
+        try:
+            rating = int(request.POST.get("rating", 0))
+        except (TypeError, ValueError):
+            rating = 0
         if 1 <= rating <= 5:
             comment.rating = rating
             comment.save()
-        return redirect("problem_detail_public", problem_id=comment.problem.id)
+    return redirect(
+        "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
+    )
 
 
 @login_required(login_url="login")
 def report_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
     if request.method == "POST":
-        comment = get_object_or_404(Comment, id=comment_id)
         comment.is_reported = True
         comment.save()
-        return redirect("problem_detail_public", problem_id=comment.problem.id)
+    return redirect(
+        "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
+    )
 
 
 @login_required(login_url="login")
 def delete_comment(request, comment_id):
-    if request.method == "POST":
-        comment = get_object_or_404(Comment, id=comment_id, author=request.user)
-        problem_id = comment.problem.id
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.method == "POST" and comment.author == request.user:
+        problem_id = getattr(comment.problem, "id", None)
         comment.delete()
         return redirect("problem_detail_public", problem_id=problem_id)
+    return redirect(
+        "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
+    )
 
 
 # แก้บัค #6: about_us ใช้ home.html แทนเพราะไม่มี about_us.html
@@ -377,7 +391,7 @@ def reset_pass(request):
                 otp = str(random.randint(100000, 999999))
                 request.session["reset_otp"] = otp
                 request.session["reset_otp_time"] = time.time()  # แก้บัค #3: บันทึกเวลา
-                request.session["reset_user_id"] = user.id
+                request.session["reset_user_id"] = getattr(user, "id", None)
                 request.session["reset_email"] = user.email
                 send_mail(
                     subject="OTP รีเซ็ตรหัสผ่าน",
@@ -526,7 +540,7 @@ def edit_problem(request, problem_id):
             problem.photo = photo
         problem.save()
 
-        return redirect(f"/problem/public/{problem.id}/?updated=1")
+        return redirect(f"/problem/public/{getattr(problem, 'id', '')}/?updated=1")
 
     return render(request, "edit_problem.html", {"problem": problem})
 
@@ -581,7 +595,11 @@ def problems_ranked(request):
     return JsonResponse(
         {
             "problems": [
-                {"id": p.id, "title": p.title, "count": p.comment_count}
+                {
+                    "id": getattr(p, "id", None),
+                    "title": p.title,
+                    "count": getattr(p, "comment_count", 0),
+                }
                 for p in problems
             ]
         }

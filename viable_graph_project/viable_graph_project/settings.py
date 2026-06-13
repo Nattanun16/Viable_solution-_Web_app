@@ -106,9 +106,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# reCAPTCHA — อ่านจาก .env เท่านั้น ไม่มี fallback hardcode
+# reCAPTCHA — อ่านจาก environment variables โดยปกติ
 RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY", "")
 RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY", "")
+
+# For local development/testing only: when DEBUG=True and no keys are provided,
+# fall back to Google's public test keys which always pass. These test keys
+# must NOT be used in production. The system check from django-recaptcha is
+# silenced because test keys intentionally trigger a warning.
+if DEBUG and (not RECAPTCHA_SITE_KEY or not RECAPTCHA_SECRET_KEY):
+    RECAPTCHA_SITE_KEY = RECAPTCHA_SITE_KEY or "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+    RECAPTCHA_SECRET_KEY = RECAPTCHA_SECRET_KEY or "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+
 RECAPTCHA_PUBLIC_KEY = RECAPTCHA_SITE_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_SECRET_KEY
 SILENCED_SYSTEM_CHECKS = ["django_recaptcha.recaptcha_test_key_error"]
