@@ -1,7 +1,7 @@
 """
 clustering.py — จัดกลุ่มวิธีแก้ปัญหาที่มีความหมายคล้ายกันเข้าด้วยกัน
 
-ใช้ Gemini API (gemini-2.0-flash) แทน sentence-transformers
+ใช้ Groq API (llama-3.3-70b-versatile)
 """
 
 from __future__ import annotations
@@ -14,11 +14,8 @@ import time
 if TYPE_CHECKING:
     from viable_graph_app.models import Comment
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.0-flash:generateContent"
-)
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
 def cluster_comments(comments: list) -> list[dict]:
@@ -26,15 +23,14 @@ def cluster_comments(comments: list) -> list[dict]:
         return []
     if len(comments) == 1:
         return [_make_group_dict([comments[0]])]
-    if not GEMINI_API_KEY:
-        print("[clustering] GEMINI_API_KEY not set -- skipping clustering")
+    if not GROQ_API_KEY:
+        print("[clustering] GROQ_API_KEY not set -- skipping clustering")
         return [_make_group_dict([c]) for c in comments]
 
-    # ── retry สูงสุด 3 ครั้ง ถ้าเจอ 429 ──
     for attempt in range(3):
         try:
-            groups_raw = _call_gemini(comments)
-            print(f"[clustering] Gemini returned groups: {groups_raw}")  # DEBUG
+            groups_raw = _call_groq(comments)
+            print(f"[clustering] Groq returned groups: {groups_raw}")
             return _build_result(comments, groups_raw)
         except Exception as e:
             if "429" in str(e):
@@ -42,71 +38,66 @@ def cluster_comments(comments: list) -> list[dict]:
                 print(f"[clustering] 429 rate limit -- waiting {wait}s (attempt {attempt+1}/3)")
                 time.sleep(wait)
             else:
-                print(f"[clustering] Gemini error: {e} -- falling back to no-grouping")
+                print(f"[clustering] Groq error: {e} -- falling back to no-grouping")
                 break
 
     return [_make_group_dict([c]) for c in comments]
 
 
-def _call_gemini(comments: list) -> list[list[int]]:
-    """
-    ส่ง comment ทั้งหมดไปให้ Gemini จัดกลุ่ม
-    คืนค่า list ของกลุ่ม เช่น [[0, 2], [1], [3, 4]]
-    """
+def _call_groq(comments: list) -> list[list[int]]:
     numbered = "\n".join(
         f"{i}. {c.text}" for i, c in enumerate(comments)
     )
 
-    prompt = f"""คุณคือผู้ช่วยจัดหมวดหมู่ความคิดเห็นภาษาไทย
-
-ด้านล่างนี้คือรายการวิธีแก้ปัญหาที่ผู้ใช้เสนอ (แต่ละบรรทัดมีหมายเลขนำหน้า):
-{numbered}
-
-งาน: จัดกลุ่มวิธีแก้ที่มีความหมายเหมือนกันหรือคล้ายกันมากเข้าด้วยกัน
-     แม้จะใช้คำต่างกัน เช่น "เพิ่มเที่ยวรถป๊อป" กับ "อยากให้รถโดยสารในมหาลัยวิ่งบ่อยขึ้น" ถือว่าเป็นกลุ่มเดียวกัน
-     ถ้าวิธีแก้สองอันพูดถึงสิ่งเดียวกันหรือแก้ปัญหาเดียวกัน ให้รวมกลุ่มเสมอ แม้จะใช้ภาษาต่างกัน
-
-กฎเหล็ก:
-- ตอบด้วย JSON เท่านั้น ห้ามมีข้อความอื่น ห้ามใส่ ```json หรือ ``` ใดๆ ทั้งสิ้น
-- รูปแบบ: array ของ array เท่านั้น เช่น [[0,2],[1],[3,4]]
-- แต่ละ sub-array คือกลุ่มหนึ่ง ตัวเลขคือ index ของวิธีแก้
-- ทุก index ต้องปรากฏใน output ครบ ไม่มีซ้ำ
-- ถ้าไม่มีอันไหนคล้ายกันเลย ให้แต่ละอันเป็นกลุ่มของตัวเอง เช่น [[0],[1],[2]]"""
+    # ใช้ .format() แทน f-string เพื่อหลีกเลี่ยง {} ใน prompt ชน f-string
+    prompt = (
+        "คุณคือผู้ช่วยจัดหมวดหมู่ความคิดเห็นภาษาไทย\n\n"
+        "ด้านล่างนี้คือรายการวิธีแก้ปัญหาที่ผู้ใช้เสนอ (แต่ละบรรทัดมีหมายเลขนำหน้า):\n"
+        + numbered +
+        "\n\nงาน: จัดกลุ่มวิธีแก้ที่มีความหมายเหมือนกันหรือคล้ายกันมากเข้าด้วยกัน\n"
+        "     แม้จะใช้คำต่างกัน เช่น 'เพิ่มเที่ยวรถป๊อป' กับ 'อยากให้รถโดยสารในมหาลัยวิ่งบ่อยขึ้น' ถือว่าเป็นกลุ่มเดียวกัน\n"
+        "     ถ้าวิธีแก้สองอันพูดถึงสิ่งเดียวกันหรือแก้ปัญหาเดียวกัน ให้รวมกลุ่มเสมอ แม้จะใช้ภาษาต่างกัน\n\n"
+        "กฎเหล็ก:\n"
+        "- ตอบด้วย JSON object ที่มี key ชื่อ 'groups' เท่านั้น\n"
+        "- รูปแบบ: {\"groups\": [[0,2],[1],[3,4]]}\n"
+        "- แต่ละ sub-array คือกลุ่มหนึ่ง ตัวเลขคือ index ของวิธีแก้\n"
+        "- ทุก index ต้องปรากฏใน output ครบ ไม่มีซ้ำ\n"
+        "- ถ้าไม่มีอันไหนคล้ายกันเลย ให้แต่ละอันเป็นกลุ่มของตัวเอง"
+    )
 
     resp = requests.post(
-        f"{GEMINI_URL}?key={GEMINI_API_KEY}",
+        GROQ_URL,
+        headers={
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json",
+        },
         json={
-            "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {
-                "temperature": 0,
-                "responseMimeType": "application/json",  # บังคับให้ Gemini ตอบ JSON เสมอ
-            },
+            "model": "llama-3.3-70b-versatile",
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
         },
         timeout=30,
     )
     resp.raise_for_status()
 
-    raw = (
-        resp.json()
-        ["candidates"][0]["content"]["parts"][0]["text"]
-        .strip()
-    )
+    raw = resp.json()["choices"][0]["message"]["content"].strip()
+    print(f"[clustering] Raw Groq response: {repr(raw)}")
 
-    print(f"[clustering] Raw Gemini response: {repr(raw)}")  # DEBUG
+    parsed = json.loads(raw)
 
-    # ลบ markdown code block ถ้า Gemini ยังใส่มา (safety)
-    if raw.startswith("```"):
-        lines = raw.strip().split("\n")
-        # ตัดบรรทัดแรก (```json หรือ ```) และบรรทัดสุดท้าย (```)
-        inner = lines[1:-1] if lines[-1].strip() == "```" else lines[1:]
-        raw = "\n".join(inner).strip()
+    # Groq json_object mode จะ wrap ใน dict เสมอ เช่น {"groups": [[0,1]]}
+    if isinstance(parsed, dict):
+        for v in parsed.values():
+            if isinstance(v, list):
+                parsed = v
+                break
 
-    groups_raw: list[list[int]] = json.loads(raw)
+    groups_raw: list[list[int]] = parsed
     return groups_raw
 
 
 def _build_result(comments: list, groups_raw: list[list[int]]) -> list[dict]:
-    """แปลง [[0,2],[1],[3]] -> list ของ group dict"""
     result = []
     used = set()
 
@@ -118,18 +109,15 @@ def _build_result(comments: list, groups_raw: list[list[int]]) -> list[dict]:
         group_comments = [comments[i] for i in valid]
         result.append(_make_group_dict(group_comments))
 
-    # เพิ่ม comment ที่ Gemini ไม่ได้ include มา (safety)
     for i, c in enumerate(comments):
         if i not in used:
             result.append(_make_group_dict([c]))
 
-    # เรียงจากกลุ่มใหญ่ไปเล็ก
     result.sort(key=lambda g: g["count"], reverse=True)
     return result
 
 
 def _make_group_dict(group: list) -> dict:
-    """สร้าง dict สรุปข้อมูลของกลุ่มหนึ่ง"""
     representative = group[0].text
     total_rating = sum(c.rating for c in group)
     short_label = (representative[:20] + "...") if len(representative) > 20 else representative
@@ -140,5 +128,5 @@ def _make_group_dict(group: list) -> dict:
         "count": len(group),
         "members": [c.text for c in group],
         "total_rating": total_rating,
-        "bar_value": len(group),  # แก้: ใช้จำนวน comment ในกลุ่มเสมอ (ไม่ใช้ rating)
+        "bar_value": len(group),
     }
