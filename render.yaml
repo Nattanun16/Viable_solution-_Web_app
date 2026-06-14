@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: viable-solution-web-app
+    runtime: docker          # ← เปลี่ยนจาก env: docker
+    repo: Nattanun16/Viable_solution-_Web_app
+    branch: main
+    plan: free
+    dockerfilePath: Dockerfile
+    startCommand: python viable_graph_project/manage.py collectstatic --noinput && gunicorn viable_graph_project.wsgi:application --bind 0.0.0.0:$PORT --workers ${WEB_CONCURRENCY:-1}
+    autoDeploy: true
+
+databases:
+  - name: viable-solution-db
+    plan: starter

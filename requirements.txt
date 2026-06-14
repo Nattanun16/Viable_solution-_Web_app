@@ -8,3 +8,8 @@ Pillow
 django-stubs
 types-requests
 typing-extensions
+gunicorn
+whitenoise
+dj-database-url
+django-storages[boto3]
+boto3
