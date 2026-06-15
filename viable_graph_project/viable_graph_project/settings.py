@@ -9,7 +9,10 @@ from typing import Any, Dict, cast
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # แก้บัค #10: SECRET_KEY ต้องอ่านจาก environment variable ไม่ hardcode
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-g0$)7oy-3o%l44(!lp7fy6fb+9&0b=h1mukdud2(m(sun6%a0(")
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-g0$)7oy-3o%l44(!lp7fy6fb+9&0b=h1mukdud2(m(sun6%a0(",
+)
 
 # แก้บัค #11: DEBUG และ ALLOWED_HOSTS ควรอ่านจาก env
 # ตอน dev ปล่อย DEBUG=True ได้ แต่ production ต้องตั้ง DJANGO_DEBUG=False
@@ -17,7 +20,11 @@ DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
 # Production: ตั้ง ALLOWED_HOSTS ใน env เป็น "yourdomain.com,www.yourdomain.com"
 _allowed = os.getenv("ALLOWED_HOSTS", "")
-ALLOWED_HOSTS = [h.strip() for h in _allowed.split(",") if h.strip()] if _allowed else ["*"] if DEBUG else []
+ALLOWED_HOSTS = (
+    [h.strip() for h in _allowed.split(",") if h.strip()]
+    if _allowed
+    else ["*"] if DEBUG else []
+)
 
 
 # Application definition
@@ -29,6 +36,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cloudinary_storage",
+    "cloudinary",
     "viable_graph_app",
     "django_recaptcha",
     "storages",
@@ -120,9 +129,10 @@ if os.getenv("DATABASE_URL"):
         # sometimes flags as incompatible with the expected dict type used
         # for Django's DATABASES. Cast to a generic Dict[str, Any] so the
         # type-checker accepts the assignment while preserving runtime behavior.
-        DATABASES["default"] = cast(Dict[str, Any], dj_database_url.parse(
-            os.environ["DATABASE_URL"], conn_max_age=600
-        ))
+        DATABASES["default"] = cast(
+            Dict[str, Any],
+            dj_database_url.parse(os.environ["DATABASE_URL"], conn_max_age=600),
+        )
     except Exception:
         # If dj-database-url isn't installed or parsing fails, keep the existing DATABASES
         pass
@@ -139,8 +149,12 @@ RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY", "")
 # must NOT be used in production. The system check from django-recaptcha is
 # silenced because test keys intentionally trigger a warning.
 if DEBUG and (not RECAPTCHA_SITE_KEY or not RECAPTCHA_SECRET_KEY):
-    RECAPTCHA_SITE_KEY = RECAPTCHA_SITE_KEY or "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-    RECAPTCHA_SECRET_KEY = RECAPTCHA_SECRET_KEY or "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+    RECAPTCHA_SITE_KEY = (
+        RECAPTCHA_SITE_KEY or "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+    )
+    RECAPTCHA_SECRET_KEY = (
+        RECAPTCHA_SECRET_KEY or "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
+    )
 
 RECAPTCHA_PUBLIC_KEY = RECAPTCHA_SITE_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_SECRET_KEY
@@ -154,28 +168,21 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
-# Media files (default to local filesystem)
+# Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-# If AWS S3 is configured, use django-storages to store uploaded media there.
-if os.getenv("AWS_STORAGE_BUCKET_NAME"):
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "")
-    AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN", "")
-    AWS_S3_SIGNATURE_VERSION = os.getenv("AWS_S3_SIGNATURE_VERSION", "s3v4")
-    # Security / CDN related defaults
-    AWS_QUERYSTRING_AUTH = False
-    AWS_DEFAULT_ACL = None
-    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
-    AWS_LOCATION = os.getenv("AWS_LOCATION", "")
-    if AWS_S3_CUSTOM_DOMAIN:
-        MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}" if AWS_LOCATION else f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    else:
-        MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{AWS_LOCATION}/" if AWS_LOCATION else f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
+# Cloudinary storage
+if os.getenv("CLOUDINARY_CLOUD_NAME"):
+    import cloudinary
+
+    CLOUDINARY_STORAGE = {
+        "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+        "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+        "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+    }
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
 
 # แก้บัค #10: Google Vision API Key อ่านจาก env ไม่ hardcode ใน code
 GOOGLE_VISION_API_KEY = os.getenv("GOOGLE_VISION_API_KEY", "")
