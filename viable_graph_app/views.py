@@ -17,6 +17,7 @@ from .vision import check_image_safety as vision_check
 from django.core.cache import cache
 import base64
 import json
+import threading
 
 
 # 1. หน้าแรกปกติ (เรนเดอร์หน้า home.html)
@@ -215,6 +216,18 @@ def sign_up(request):
     return render(request, "sign_up.html", context)
 
 
+def send_otp_email(subject, message, from_email, recipient_list):
+    """ส่งเมลใน background thread เพื่อไม่ให้ block request"""
+
+    def _send():
+        try:
+            send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+        except Exception:
+            pass
+
+    threading.Thread(target=_send, daemon=True).start()
+
+
 @login_required(login_url="login")
 def profile(request):
     my_problems = Problem.objects.filter(reported_by=request.user)
@@ -384,16 +397,16 @@ def reset_pass(request):
             request.session["reset_otp_time"] = time.time()
             email = request.session.get("reset_email", "")
             if email:
-                try:
-                    send_mail(
+                #try:
+                    send_otp_email(
                         subject="OTP รีเซ็ตรหัสผ่าน",
                         message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[email],
-                        fail_silently=False,
+                        #fail_silently=False,
                     )
-                except Exception as e:
-                    return JsonResponse({"status": "error", "message": str(e)})
+                #except Exception as e:
+                    #return JsonResponse({"status": "error", "message": str(e)})
             return JsonResponse({"status": "sent"})
 
         student_id = request.POST.get("student_id", "").strip()
@@ -407,12 +420,11 @@ def reset_pass(request):
                 request.session["reset_email"] = user.email
                 request.session.save()
                 try:
-                    send_mail(
+                    send_otp_email(
                         subject="OTP รีเซ็ตรหัสผ่าน",
                         message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
                         from_email=settings.EMAIL_HOST_USER,
                         recipient_list=[user.email],
-                        fail_silently=False,
                     )
                     messages.success(request, f"ส่ง OTP ไปที่ {user.email} แล้ว")
                 except Exception as e:
