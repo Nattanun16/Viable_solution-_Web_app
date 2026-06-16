@@ -378,69 +378,48 @@ OTP_EXPIRY_SECONDS = 300  # 5 นาที
 def reset_pass(request):
     if request.method == "POST":
 
-        # กรณีกด Resend OTP
         if request.POST.get("resend") == "1":
             otp = str(random.randint(100000, 999999))
             request.session["reset_otp"] = otp
-            request.session["reset_otp_time"] = time.time()  # แก้บัค #3: บันทึกเวลา
+            request.session["reset_otp_time"] = time.time()
             email = request.session.get("reset_email", "")
             if email:
-                send_mail(
-                    subject="OTP รีเซ็ตรหัสผ่าน",
-                    message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
-                    from_email=settings.EMAIL_HOST_USER,
-                    recipient_list=[email],
-                )
+                try:
+                    send_mail(
+                        subject="OTP รีเซ็ตรหัสผ่าน",
+                        message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    return JsonResponse({"status": "error", "message": str(e)})
             return JsonResponse({"status": "sent"})
 
-        # กรณีกรอก Student ID เพื่อขอ OTP
-        def reset_pass(request):
-            if request.method == "POST":
-
-                if request.POST.get("resend") == "1":
-                    otp = str(random.randint(100000, 999999))
-                    request.session["reset_otp"] = otp
-                    request.session["reset_otp_time"] = time.time()
-                    email = request.session.get("reset_email", "")
-                    if email:
-                        try:
-                            send_mail(
-                                subject="OTP รีเซ็ตรหัสผ่าน",
-                                message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
-                                from_email=settings.EMAIL_HOST_USER,
-                                recipient_list=[email],
-                                fail_silently=False,
-                            )
-                        except Exception as e:
-                            return JsonResponse({"status": "error", "message": str(e)})
-                    return JsonResponse({"status": "sent"})
-
-                student_id = request.POST.get("student_id", "").strip()
-                if student_id and not request.POST.get("otp"):
-                    try:
-                        user = User.objects.get(username=student_id)
-                        otp = str(random.randint(100000, 999999))
-                        request.session["reset_otp"] = otp
-                        request.session["reset_otp_time"] = time.time()
-                        request.session["reset_user_id"] = user.pk
-                        request.session["reset_email"] = user.email
-                        request.session.save()
-                        try:
-                            send_mail(
-                                subject="OTP รีเซ็ตรหัสผ่าน",
-                                message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
-                                from_email=settings.EMAIL_HOST_USER,
-                                recipient_list=[user.email],
-                                fail_silently=False,
-                            )
-                            messages.success(
-                                request, f"ส่ง OTP ไปที่ {user.email} แล้ว"
-                            )
-                        except Exception as e:
-                            messages.error(request, f"ส่ง email ไม่สำเร็จ: {str(e)}")
-                    except User.DoesNotExist:
-                        messages.error(request, "ไม่พบ Student ID นี้ในระบบ")
-                    return render(request, "reset_pass.html")
+        student_id = request.POST.get("student_id", "").strip()
+        if student_id and not request.POST.get("otp"):
+            try:
+                user = User.objects.get(username=student_id)
+                otp = str(random.randint(100000, 999999))
+                request.session["reset_otp"] = otp
+                request.session["reset_otp_time"] = time.time()
+                request.session["reset_user_id"] = user.pk
+                request.session["reset_email"] = user.email
+                request.session.save()
+                try:
+                    send_mail(
+                        subject="OTP รีเซ็ตรหัสผ่าน",
+                        message=f"รหัส OTP ของคุณคือ: {otp}\nหมดอายุใน 5 นาที",
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[user.email],
+                        fail_silently=False,
+                    )
+                    messages.success(request, f"ส่ง OTP ไปที่ {user.email} แล้ว")
+                except Exception as e:
+                    messages.error(request, f"ส่ง email ไม่สำเร็จ: {str(e)}")
+            except User.DoesNotExist:
+                messages.error(request, "ไม่พบ Student ID นี้ในระบบ")
+            return render(request, "reset_pass.html")
 
         otp_input = request.POST.get("otp", "").strip()
         new_password = request.POST.get("new_password", "")
@@ -471,7 +450,7 @@ def reset_pass(request):
         except User.DoesNotExist:
             messages.error(request, "เกิดข้อผิดพลาด กรุณาลองใหม่")
 
-        return render(request, "reset_pass.html")
+    return render(request, "reset_pass.html")
 
 
 def login(request):
