@@ -169,6 +169,14 @@ def sign_up(request):
         if not student_id or not email or not password or not faculty:
             messages.error(request, "กรุณากรอกข้อมูลทุกช่องให้ครบถ้วน")
             return render(request, "sign_up.html", context)
+        ALLOWED_DOMAINS = ["student.chula.ac.th", "chula.ac.th"]
+        email_domain = email.split("@")[-1].lower()
+        if email_domain not in ALLOWED_DOMAINS:
+            messages.error(
+                request,
+                "กรุณาใช้อีเมลของจุฬาลงกรณ์มหาวิทยาลัยเท่านั้น (@student.chula.ac.th หรือ @chula.ac.th)",
+            )
+            return render(request, "sign_up.html", context)
 
         pw = password or ""
         if (
@@ -263,7 +271,9 @@ def define_problem(request):
         if photo:
             vision_result = vision_check(photo)
             if not vision_result["safe"]:
-                messages.error(request, f"❌ {vision_result['reason']} กรุณาเลือกรูปอื่น")
+                messages.error(
+                    request, f"❌ {vision_result['reason']} กรุณาเลือกรูปอื่น"
+                )
                 return render(request, "define_problem.html")
 
         Problem.objects.create(
@@ -527,7 +537,9 @@ def edit_problem(request, problem_id):
         if photo:
             vision_result = vision_check(photo)
             if not vision_result["safe"]:
-                messages.error(request, f"❌ {vision_result['reason']} กรุณาเลือกรูปอื่น")
+                messages.error(
+                    request, f"❌ {vision_result['reason']} กรุณาเลือกรูปอื่น"
+                )
                 return render(request, "edit_problem.html", {"problem": problem})
 
         problem.title = title
@@ -615,6 +627,7 @@ def problem_solutions_data(request):
 
     # ดึงจาก cache ก่อน (เก็บไว้ 10 นาที)
     from django.core.cache import cache
+
     cache_key = f"solutions_grouped_{problem_id}"
     cached = cache.get(cache_key)
     if cached:
@@ -629,15 +642,16 @@ def problem_solutions_data(request):
 
     # ── จัดกลุ่มด้วย clustering module ──
     from . import clustering
+
     groups = clustering.cluster_comments(comments)
 
     labels = [g["short_label"] for g in groups]
-    data   = [g["bar_value"]   for g in groups]
+    data = [g["bar_value"] for g in groups]
     details = [
         {
-            "text":    g["representative"],
-            "rating":  g["total_rating"],
-            "count":   g["count"],
+            "text": g["representative"],
+            "rating": g["total_rating"],
+            "count": g["count"],
             "members": g["members"],
         }
         for g in groups
