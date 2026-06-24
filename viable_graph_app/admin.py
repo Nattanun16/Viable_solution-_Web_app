@@ -14,12 +14,19 @@ class ProblemAdmin(admin.ModelAdmin):
     )
     list_filter = ("category", "status", "is_approved", "created_at")
     search_fields = ("title", "description")
-    list_editable = ("status", "is_approved")
-    actions = ["approve_problems"]
+    list_editable = (
+        "status",
+        "is_approved",
+    ) 
+    actions = ["approve_problems", "reject_problems"]
 
-    @admin.action(description="✅ อนุมัติปัญหาที่เลือก")
     def approve_problems(self, request, queryset):
         queryset.update(is_approved=True)
+    approve_problems.short_description = "✅ อนุมัติปัญหาที่เลือก"
+
+    def reject_problems(self, request, queryset):
+        queryset.update(is_approved=False)
+    reject_problems.short_description = "❌ ไม่อนุมัติปัญหาที่เลือก"
 
 
 @admin.register(Suggestion)
