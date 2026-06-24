@@ -4,14 +4,23 @@ from .models import Problem, Suggestion, Comment
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ("title", "category", "status", "reported_by", "created_at")
-    list_filter = ("category", "status","is_approved", "created_at")
+    list_display = (
+        "title",
+        "category",
+        "status",
+        "is_approved",
+        "reported_by",
+        "created_at",
+    )
+    list_filter = ("category", "status", "is_approved", "created_at")
     search_fields = ("title", "description")
-    list_editable = ("status","is_approved")
+    list_editable = ("status", "is_approved")
     actions = ["approve_problems"]
+
     @admin.action(description="✅ อนุมัติปัญหาที่เลือก")
     def approve_problems(self, request, queryset):
         queryset.update(is_approved=True)
+
 
 @admin.register(Suggestion)
 class SuggestionAdmin(admin.ModelAdmin):
