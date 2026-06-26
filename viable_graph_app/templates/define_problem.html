@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Define your Problems</title>
+    <title>ระบุปัญหาที่พบในจุฬาลงกรณ์มหาวิทยาลัย</title>
     {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -474,10 +474,10 @@
           <a class="back-btn" href="{% url 'home' %}" title="Back">&#8592;</a>
 
           <div class="title-wrap">
-            <div class="title-define">Define</div>
+            <div class="title-define">ระบุ</div>
             <div class="title-big">
-              <span class="title-your">your</span>
-              <span class="title-problems">Problems</span>
+              <span class="title-your">ปัญหาที่พบในจุฬาลงกรณ์มหาวิทยาลัย</span>
+              <span class="title-problems">ของคุณ</span>
             </div>
           </div>
 
@@ -488,10 +488,10 @@
             <div class="tab-fields active" id="tab-location">
               <div class="field-wrap">
                 <span class="field-icon">📍</span>
-                <input class="field-input" type="text" name="location" placeholder="Enter Your Problem Location" />
+                <input class="field-input" type="text" name="location" placeholder="ระบุตำแหน่งที่พบปัญหา" />
               </div>
               <div class="field-wrap">
-                <input class="field-input" type="text" name="tags" placeholder="Insert Your tags" style="padding-left:1.2rem;" />
+                <input class="field-input" type="text" name="tags" placeholder="ใส่แท็กที่ต้องการ" style="padding-left:1.2rem;" />
               </div>
             </div>
 
@@ -499,7 +499,7 @@
             <div class="tab-fields" id="tab-info">
               <div class="select-wrap">
                 <select class="field-select" name="category" id="category-select" onchange="this.classList.add('selected')">
-                  <option value="" disabled selected>Select the type of problem</option>
+                  <option value="" disabled selected>เลือกประเภทของปัญหา</option>
                   <option value="WASTE">ปริมาณขยะและเศษอาหาร</option>
                   <option value="POLLUTION">มลพิษและการใช้พลังงาน</option>
                   <option value="WATER">การจัดการน้ำ</option>
@@ -510,18 +510,18 @@
                 <span class="select-arrow">▾</span>
               </div>
 
-              <input class="field-date" type="date" name="incident_date" id="incident-date" placeholder="DD/MM/YYYY" />
+              <input class="field-date" type="date" name="incident_date" id="incident-date" placeholder="วว/ดด/ปปปป" />
 
-              <textarea class="field-textarea" name="description" placeholder="Define your problem"></textarea>
+              <textarea class="field-textarea" name="description" placeholder="ระบุรายละเอียดของปัญหาที่พบ"></textarea>
             </div>
           </div>
 
           <!-- Tab pills on right edge -->
           <div class="tabs-col">
             <div class="tab-pill active" onclick="switchTab('location', this)">
-              Location<br />&amp;tags
+              ตำแหน่งที่พบปัญหา<br />&amp;แท็ก
             </div>
-            <div class="tab-pill" onclick="switchTab('info', this)">Information</div>
+            <div class="tab-pill" onclick="switchTab('info', this)">ข้อมูลของปัญหา</div>
           </div>
         </div>
 
@@ -549,7 +549,7 @@
                 <ellipse cx="140" cy="300" rx="120" ry="60" fill="#6aba6a" />
               </svg>
               <div class="img-insert-label" style="font-size:0.8rem; padding:0.5rem 0.8rem;">
-                Insert your<br />picture here
+                ใส่รูปปัญหาของคุณ<br />ที่นี่
               </div>
             </div>
           </div>
@@ -557,7 +557,7 @@
 
           <input class="name-input" type="text" name="title" placeholder="Name Problem" required />
 
-          <button type="submit" class="send-btn">Send</button>
+          <button type="submit" class="send-btn">ส่งปัญหา</button>
         </div>
       </div>
     </form>

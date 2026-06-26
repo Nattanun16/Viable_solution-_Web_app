@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In</title>
+    <title>เข้าสู่ระบบ</title>
     {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -324,10 +324,10 @@
 
         <button class="back-btn" onclick="history.back()" title="Go back">&#8592;</button>
 
-        <h1 class="login-title">Log In</h1>
+        <h1 class="login-title">เข้าสู่ระบบ</h1>
 
         <section class="login-panel" aria-labelledby="login-title">
-            <p class="panel-sub">Sign in with your student account to continue.</p>
+            <p class="panel-sub">กรุณาเข้าสู่ระบบด้วยบัญชีนิสิตของคุณ</p>
 
             {% if messages %}
             <div class="messages">
@@ -342,12 +342,12 @@
 
                 <div class="input-group">
                     <span class="input-icon" style="font-size: 180%; position: absolute; top: 40%;">🪪</span>
-                    <input type="text" name="student_id" placeholder="Enter your student ID" autocomplete="username">
+                    <input type="text" name="student_id" placeholder="กรุณาใส่รหัสนิสิต" autocomplete="username">
                 </div>
 
                 <div class="input-group password-row">
                     <span class="input-icon" style="font-size: 150%; position: absolute; top: 45%;">🔒</span>
-                    <input id="password-input" type="password" name="password" placeholder="Enter Your Password"
+                    <input id="password-input" type="password" name="password" placeholder="กรุณาใส่รหัสผ่าน"
                         autocomplete="current-password" oninput="validatePassword(this.value)">
                     <img id="toggle-icon" src="{% static 'images/eye_open.png' %}" class="password-toggle"
                         onclick="togglePassword()" width="22" height="22" title="Toggle password">
@@ -362,15 +362,15 @@
                 </div>
 
                 <div id="recaptcha-error" class="error-box">
-                    • กรุณากาช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนล็อกอิน
+                    • กรุณากาช่อง "ฉันไม่ใช่โปรแกรมอัตโนมัติ" ก่อนเข้าสู่ระบบ
                 </div>
 
                 <button type="submit" class="login-button">Log In</button>
 
                 <div class="login-footer">
                     <div class="footer-links">
-                        <span>Forget Password? <a href="{% url 'reset_password' %}">Reset Password</a></span>
-                        <span>No Account? <a href="{% url 'sign_up' %}">Sign Up</a></span>
+                        <span>ลืมรหัสผ่าน? <a href="{% url 'reset_password' %}">รีเซ็ตรหัสผ่าน</a></span>
+                        <span>ยังไม่มีบัญชีผู้ใช้? <a href="{% url 'sign_up' %}">ลงทะเบียน</a></span>
                     </div>
                 </div>
             </form>

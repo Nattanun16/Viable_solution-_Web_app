@@ -1,409 +1,431 @@
 <!DOCTYPE html>
 <html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propose Solution – Viable Graph</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>เสนอแนวทางแก้ปัญหา – CoSolvers</title>
     {% load static %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: #ffb3d9;
-            min-height: 100vh;
-            color: #1a1a1a;
-        }
-
-        /* NAVBAR */
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 2.5rem;
-        }
-
-        .navbar-brand {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.2rem;
-            color: #ffffff;
-            letter-spacing: 0.06em;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #1a1a1a;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            text-decoration: underline;
-            text-underline-offset: 4px;
-        }
-
-        /* SEARCH BAR */
-        .search-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.75rem;
-            padding: 0.5rem 2.5rem 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .search-tag-input {
-            padding: 0.65rem 1.2rem 0.65rem 2.2rem;
-            border-radius: 999px;
-            border: 1.8px solid #1a1a1a;
-            background: #ffffff;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.95rem;
-            color: #1a1a1a;
-            outline: none;
-            width: 200px;
-            position: relative;
-            transition: border-color 0.2s;
-        }
-
-        .search-tag-input:focus { border-color: #d4007a; }
-
-        .tag-input-wrap {
-            position: relative;
-        }
-
-        .tag-hash {
-            position: absolute;
-            left: 0.85rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #00bcd4;
-            font-weight: 700;
-            font-size: 1rem;
-            pointer-events: none;
-        }
-
-        .category-select {
-            padding: 0.65rem 2.2rem 0.65rem 1rem;
-            border-radius: 999px;
-            border: 1.8px solid #1a1a1a;
-            background: #ffffff;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.95rem;
-            color: rgba(60,30,50,0.5);
-            outline: none;
-            appearance: none;
-            cursor: pointer;
-            width: 260px;
-            transition: border-color 0.2s;
-        }
-
-        .category-select:focus { border-color: #d4007a; }
-        .category-select.selected { color: #1a1a1a; }
-
-        .select-wrap {
-            position: relative;
-        }
-
-        .select-arrow {
-            position: absolute;
-            right: 0.85rem;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        .search-btn {
-            width: 2.6rem;
-            height: 2.6rem;
-            border-radius: 50%;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s;
-        }
-
-        .search-btn:hover { opacity: 0.7; }
-
-        .search-btn svg {
-            width: 1.8rem;
-            height: 1.8rem;
-            stroke: #d4007a;
-        }
-
-        /* PROBLEM GRID */
-        .grid-wrap {
-            padding: 0 2.5rem 3rem;
-        }
-
-        .divider {
-            height: 2px;
-            background: rgba(200,0,100,0.18);
-            margin-bottom: 1.5rem;
-        }
-
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: #ffb3d9;
+        min-height: 100vh;
+        color: #1a1a1a;
+      }
+      
+      /* NAVBAR */
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2.5rem;
+      }
+      
+      .navbar-brand {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2.2rem;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        text-decoration: none;
+      }
+      
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      
+      .nav-links a {
+        color: #1a1a1a;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      
+      .nav-links a:hover,
+      .nav-links a.active {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      
+      /* SEARCH BAR */
+      .search-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        padding: 0.5rem 2.5rem 1.5rem;
+        flex-wrap: wrap;
+      }
+      
+      .search-tag-input {
+        padding: 0.65rem 1.2rem 0.65rem 2.2rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+        color: #1a1a1a;
+        outline: none;
+        width: 200px;
+        position: relative;
+        transition: border-color 0.2s;
+      }
+      
+      .search-tag-input:focus {
+        border-color: #d4007a;
+      }
+      
+      .tag-input-wrap {
+        position: relative;
+      }
+      
+      .tag-hash {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #00bcd4;
+        font-weight: 700;
+        font-size: 1rem;
+        pointer-events: none;
+      }
+      
+      .category-select {
+        padding: 0.65rem 2.2rem 0.65rem 1rem;
+        border-radius: 999px;
+        border: 1.8px solid #1a1a1a;
+        background: #ffffff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+        color: rgba(60, 30, 50, 0.5);
+        outline: none;
+        appearance: none;
+        cursor: pointer;
+        width: 260px;
+        transition: border-color 0.2s;
+      }
+      
+      .category-select:focus {
+        border-color: #d4007a;
+      }
+      .category-select.selected {
+        color: #1a1a1a;
+      }
+      
+      .select-wrap {
+        position: relative;
+      }
+      
+      .select-arrow {
+        position: absolute;
+        right: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 0.9rem;
+        color: #888;
+      }
+      
+      .search-btn {
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 50%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s;
+      }
+      
+      .search-btn:hover {
+        opacity: 0.7;
+      }
+      
+      .search-btn svg {
+        width: 1.8rem;
+        height: 1.8rem;
+        stroke: #d4007a;
+      }
+      
+      /* PROBLEM GRID */
+      .grid-wrap {
+        padding: 0 2.5rem 3rem;
+      }
+      
+      .divider {
+        height: 2px;
+        background: rgba(200, 0, 100, 0.18);
+        margin-bottom: 1.5rem;
+      }
+      
+      .problems-grid {
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: repeat(5, 1fr);
+      }
+      
+      /* Responsive breakpoints: up to 5 columns on large screens */
+      @media (max-width: 1200px) {
         .problems-grid {
-            display: grid;
-            gap: 1.2rem;
-            grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(3, 1fr);
         }
-
-        /* Responsive breakpoints: up to 5 columns on large screens */
-        @media (max-width: 1200px) {
-            .problems-grid { grid-template-columns: repeat(3, 1fr); }
+      }
+      @media (max-width: 800px) {
+        .problems-grid {
+          grid-template-columns: repeat(2, 1fr);
         }
-        @media (max-width: 800px) {
-            .problems-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 480px) {
+        .problems-grid {
+          grid-template-columns: 1fr;
         }
-        @media (max-width: 480px) {
-            .problems-grid { grid-template-columns: 1fr; }
-        }
-
-        /* CARD */
-        .problem-card {
-            background: #ffffff;
-            border: 2px solid #1a1a1a;
-            border-radius: 18px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .problem-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-img-placeholder {
-            width: 100%;
-            height: 160px;
-        }
-
-        .card-body {
-            padding: 0.75rem 0.85rem 0.6rem;
-        }
-
-        .card-title-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.4rem;
-            margin-bottom: 0.4rem;
-        }
-
-        .card-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            line-height: 1.3;
-        }
-
-        .info-icon {
-            font-size: 0.85rem;
-            color: #aaa;
-            flex-shrink: 0;
-            cursor: help;
-        }
-
-        .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-        }
-
-        .card-tag {
-            background: #00bcd4;
-            color: #ffffff;
-            border-radius: 999px;
-            padding: 0.18rem 0.7rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* completed badge */
-        .check-badge {
-            position: absolute;
-            bottom: 0.6rem;
-            right: 0.6rem;
-            width: 2.2rem;
-            height: 2.2rem;
-            background: #00c050;
-            border: 3px solid #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            z-index: 2;
-        }
-
-        /* empty state */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: rgba(160,0,90,0.6);
-            font-size: 1rem;
-            grid-column: 1 / -1;
-        }
-
-        /* row divider between rows */
-        .grid-row-divider {
-            grid-column: 1 / -1;
-            height: 1.5px;
-            background: rgba(200,0,100,0.15);
-            margin: 0.3rem 0;
-        }
+      }
+      
+      /* CARD */
+      .problem-card {
+        background: #ffffff;
+        border: 2px solid #1a1a1a;
+        border-radius: 18px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+      
+      .problem-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+      
+      .card-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+      }
+      
+      .card-img-placeholder {
+        width: 100%;
+        height: 160px;
+      }
+      
+      .card-body {
+        padding: 0.75rem 0.85rem 0.6rem;
+      }
+      
+      .card-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.4rem;
+        margin-bottom: 0.4rem;
+      }
+      
+      .card-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        line-height: 1.3;
+      }
+      
+      .info-icon {
+        font-size: 0.85rem;
+        color: #aaa;
+        flex-shrink: 0;
+        cursor: help;
+      }
+      
+      .card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
+      
+      .card-tag {
+        background: #00bcd4;
+        color: #ffffff;
+        border-radius: 999px;
+        padding: 0.18rem 0.7rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      
+      /* completed badge */
+      .check-badge {
+        position: absolute;
+        bottom: 0.6rem;
+        right: 0.6rem;
+        width: 2.2rem;
+        height: 2.2rem;
+        background: #00c050;
+        border: 3px solid #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 2;
+      }
+      
+      /* empty state */
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: rgba(160, 0, 90, 0.6);
+        font-size: 1rem;
+        grid-column: 1 / -1;
+      }
+      
+      /* row divider between rows */
+      .grid-row-divider {
+        grid-column: 1 / -1;
+        height: 1.5px;
+        background: rgba(200, 0, 100, 0.15);
+        margin: 0.3rem 0;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- NAVBAR -->
     <nav class="navbar">
-        <a class="navbar-brand" href="{% url 'home' %}">Viable Graph</a>
-        <ul class="nav-links">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'propose_solution' %}" class="active">Propose</a></li>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'profile' %}">Profile</a></li>
-                <li><a href="{% url 'logout' %}">Log Out</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Log In</a></li>
-            {% endif %}
-        </ul>
+      <a class="navbar-brand" href="{% url 'home' %}">CoSolvers</a>
+      <ul class="nav-links">
+        <li>
+          <a href="{% url 'home' %}">หน้าหลัก</a>
+        </li>
+        <li>
+          <a href="{% url 'propose_solution' %}" class="active">เสนอแนวทางแก้ปัญหา</a>
+        </li>
+        {% if user.is_authenticated %}
+          <li>
+            <a href="{% url 'profile' %}">โปรไฟล์</a>
+          </li>
+          <li>
+            <a href="{% url 'logout' %}">ออกจากระบบ</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'login' %}">เข้าสู่ระบบ</a>
+          </li>
+        {% endif %}
+      </ul>
     </nav>
 
     <!-- SEARCH BAR -->
-    <form method="get" action="{% url "propose_solution" %}">
-        <div class="search-wrap">
-            <div class="tag-input-wrap">
-                <span class="tag-hash">#</span>
-                <input class="search-tag-input" type="text" name="tag"
-                    placeholder="tag" value="{{ request.GET.tag }}">
-            </div>
-
-            <div class="select-wrap">
-                <select class="category-select" name="category" onchange="this.classList.add('selected')">
-                    <option value="">Select the type of problem</option>
-                    {% if request.GET.category == "WASTE" %}
-                        <option value="WASTE" selected>ปริมาณขยะและเศษอาหาร</option>
-                    {% else %}
-                        <option value="WASTE">ปริมาณขยะและเศษอาหาร</option>
-                    {% endif %}
-                    {% if request.GET.category == "POLLUTION" %}
-                        <option value="POLLUTION" selected>มลพิษและการใช้พลังงาน</option>
-                    {% else %}
-                        <option value="POLLUTION">มลพิษและการใช้พลังงาน</option>
-                    {% endif %}
-                    {% if request.GET.category == "WATER" %}
-                        <option value="WATER" selected>การจัดการน้ำ</option>
-                    {% else %}
-                        <option value="WATER">การจัดการน้ำ</option>
-                    {% endif %}
-                    {% if request.GET.category == "APP" %}
-                        <option value="APP" selected>ระบบแอปพลิเคชันและการสื่อสาร</option>
-                    {% else %}
-                        <option value="APP">ระบบแอปพลิเคชันและการสื่อสาร</option>
-                    {% endif %}
-                    {% if request.GET.category == "COMMUNITY" %}
-                        <option value="COMMUNITY" selected>การมีส่วนร่วมของชุมชน (ประชาคมจุฬาฯ)</option>
-                    {% else %}
-                        <option value="COMMUNITY">การมีส่วนร่วมของชุมชน (ประชาคมจุฬาฯ)</option>
-                    {% endif %}
-                    {% if request.GET.category == "OTHERS" %}
-                        <option value="OTHERS" selected>อื่นๆ</option>
-                    {% else %}
-                        <option value="OTHERS">อื่นๆ</option>
-                    {% endif %}
-                </select>
-            </div>
-            <button class="search-btn" type="submit" aria-label="Search">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="2.2" stroke="currentColor">
-                    <circle cx="11" cy="11" r="7"/>
-                    <line x1="16.5" y1="16.5" x2="22" y2="22"/>
-                </svg>
-            </button>
+    <form method="get" action="{% url 'propose_solution' %}">
+      <div class="search-wrap">
+        <div class="tag-input-wrap">
+          <span class="tag-hash">#</span>
+          <input class="search-tag-input" type="text" name="tag" placeholder="tag" value="{{ request.GET.tag }}" />
         </div>
+
+        <div class="select-wrap">
+          <select class="category-select" name="category" onchange="this.classList.add('selected')">
+            <option value="">เลือกประเภทของปัญหา</option>
+            {% if request.GET.category == 'WASTE' %}
+              <option value="WASTE" selected>ปริมาณขยะและเศษอาหาร</option>
+            {% else %}
+              <option value="WASTE">ปริมาณขยะและเศษอาหาร</option>
+            {% endif %}
+            {% if request.GET.category == 'POLLUTION' %}
+              <option value="POLLUTION" selected>มลพิษและการใช้พลังงาน</option>
+            {% else %}
+              <option value="POLLUTION">มลพิษและการใช้พลังงาน</option>
+            {% endif %}
+            {% if request.GET.category == 'WATER' %}
+              <option value="WATER" selected>การจัดการน้ำ</option>
+            {% else %}
+              <option value="WATER">การจัดการน้ำ</option>
+            {% endif %}
+            {% if request.GET.category == 'APP' %}
+              <option value="APP" selected>ระบบแอปพลิเคชันและการสื่อสาร</option>
+            {% else %}
+              <option value="APP">ระบบแอปพลิเคชันและการสื่อสาร</option>
+            {% endif %}
+            {% if request.GET.category == 'COMMUNITY' %}
+              <option value="COMMUNITY" selected>การมีส่วนร่วมของชุมชน (ประชาคมจุฬาฯ)</option>
+            {% else %}
+              <option value="COMMUNITY">การมีส่วนร่วมของชุมชน (ประชาคมจุฬาฯ)</option>
+            {% endif %}
+            {% if request.GET.category == 'OTHERS' %}
+              <option value="OTHERS" selected>อื่นๆ</option>
+            {% else %}
+              <option value="OTHERS">อื่นๆ</option>
+            {% endif %}
+          </select>
+        </div>
+        <button class="search-btn" type="submit" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="16.5" y1="16.5" x2="22" y2="22" />
+          </svg>
+        </button>
+      </div>
     </form>
 
     <!-- PROBLEM GRID -->
     <div class="grid-wrap">
-        <div class="divider"></div>
-        <div class="problems-grid">
-            {% for problem in problems %}
+      <div class="divider"></div>
+      <div class="problems-grid">
+        {% for problem in problems %}
+          {% if forloop.counter == 4 %}
+            <div class="grid-row-divider"></div>
+          {% endif %}
 
-                {% if forloop.counter == 4 %}
-                    <div class="grid-row-divider"></div>
-                {% endif %}
+          <a class="problem-card" href="{% url 'problem_detail_public' problem.id %}">
+            {% if problem.photo %}
+              <img class="card-img" src="{{ problem.photo.url }}" alt="{{ problem.title }}" />
+            {% else %}
+              <svg class="card-img-placeholder" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+                <rect width="220" height="160" fill="#b8e8ff" />
+                <ellipse cx="70" cy="40" rx="35" ry="25" fill="white" opacity="0.85" />
+                <ellipse cx="120" cy="30" rx="45" ry="30" fill="white" opacity="0.8" />
+                <ellipse cx="0" cy="160" rx="140" ry="65" fill="#4a9a4a" />
+                <ellipse cx="220" cy="160" rx="120" ry="55" fill="#5aaa5a" />
+                <ellipse cx="110" cy="160" rx="100" ry="45" fill="#6aba6a" />
+              </svg>
+            {% endif %}
 
-                <a class="problem-card" href="{% url 'problem_detail_public' problem.id %}">
-                    {% if problem.photo %}
-                        <img class="card-img" src="{{ problem.photo.url }}" alt="{{ problem.title }}">
-                    {% else %}
-                        <svg class="card-img-placeholder" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="220" height="160" fill="#b8e8ff"/>
-                            <ellipse cx="70" cy="40" rx="35" ry="25" fill="white" opacity="0.85"/>
-                            <ellipse cx="120" cy="30" rx="45" ry="30" fill="white" opacity="0.8"/>
-                            <ellipse cx="0" cy="160" rx="140" ry="65" fill="#4a9a4a"/>
-                            <ellipse cx="220" cy="160" rx="120" ry="55" fill="#5aaa5a"/>
-                            <ellipse cx="110" cy="160" rx="100" ry="45" fill="#6aba6a"/>
-                        </svg>
-                    {% endif %}
+            <div class="card-body">
+              <div class="card-title-row">
+                <div class="card-title">{{ problem.title }}</div>
+                <span class="info-icon" title="{{ problem.description }}">ℹ️</span>
+              </div>
+              {% if problem.tags %}
+                <div class="card-tags">
+                  {% for tag in problem.tags.split %}
+                    <span class="card-tag"># {{ tag }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
 
-                    <div class="card-body">
-                        <div class="card-title-row">
-                            <div class="card-title">{{ problem.title }}</div>
-                            <span class="info-icon" title="{{ problem.description }}">ℹ️</span>
-                        </div>
-                        {% if problem.tags %}
-                        <div class="card-tags">
-                            {% for tag in problem.tags.split %}
-                                <span class="card-tag"># {{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    {% if problem.status == 'COMPLETED' %}
-                        <div class="check-badge">✓</div>
-                    {% endif %}
-                </a>
-
-            {% empty %}
-                <div class="empty-state">ยังไม่มีปัญหาที่รายงาน</div>
-            {% endfor %}
-        </div>
+            {% if problem.status == 'COMPLETED' %}
+              <div class="check-badge">✓</div>
+            {% endif %}
+          </a>
+        {% empty %}
+          <div class="empty-state">ยังไม่มีปัญหาที่รายงาน</div>
+        {% endfor %}
+      </div>
     </div>
-
-</body>
+  </body>
 </html>

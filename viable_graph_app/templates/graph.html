@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Graph – Viable Graph</title>
+  <title>กราฟ – CoSolvers</title>
   {% load static %}
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -208,16 +208,16 @@
 
   <!-- NAVBAR -->
   <nav class="navbar">
-    <a class="navbar-brand" href="{% url 'home' %}">Viable Graph</a>
+    <a class="navbar-brand" href="{% url 'home' %}">CoSolvers</a>
     <ul class="nav-links">
-      <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'propose_solution' %}">Purpose</a></li>
-      <li><a href="{% url 'graph' %}" class="active">Graph</a></li>
+      <li><a href="{% url 'home' %}">หน้าหลัก</a></li>
+      <li><a href="{% url 'propose_solution' %}">เสนอแนวทางแก้ปัญหา</a></li>
+      <li><a href="{% url 'graph' %}" class="active">กราฟ</a></li>
       {% if user.is_authenticated %}
-        <li><a href="{% url 'profile' %}">Profile</a></li>
-        <li><a href="{% url 'logout' %}">Log Out</a></li>
+        <li><a href="{% url 'profile' %}">โปรไฟล์</a></li>
+        <li><a href="{% url 'logout' %}">ออกจากระบบ</a></li>
       {% else %}
-        <li><a href="{% url 'login' %}">Log In</a></li>
+        <li><a href="{% url 'login' %}">เข้าสู่ระบบ</a></li>
       {% endif %}
     </ul>
   </nav>

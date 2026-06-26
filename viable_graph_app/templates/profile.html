@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile – Viable Graph</title>
+    <title>Profile – CoSolvers</title>
     {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -548,19 +548,19 @@
   <body>
     <!-- NAVBAR -->
     <nav class="navbar">
-      <a class="navbar-brand" href="{% url 'home' %}">Viable Graph</a>
+      <a class="navbar-brand" href="{% url 'home' %}">CoSolvers</a>
       <ul class="nav-links">
         <li>
-          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'home' %}">หน้าหลัก</a>
         </li>
         <li>
-          <a href="{% url 'propose_solution' %}">Purpose</a>
+          <a href="{% url 'propose_solution' %}">เสนอแนวทางแก้ปัญหา</a>
         </li>
         <li>
-          <a href="{% url 'profile' %}" class="active">Profile</a>
+          <a href="{% url 'profile' %}" class="active">โปรไฟล์</a>
         </li>
         <li>
-          <a href="{% url 'logout' %}">Log Out</a>
+          <a href="{% url 'logout' %}">ออกจากระบบ</a>
         </li>
       </ul>
     </nav>
@@ -572,7 +572,7 @@
         <div class="bell-icon">🔔</div>
 
         <!-- avatar — click to open modal -->
-        <div class="avatar-wrap" onclick="openModal()" title="Change profile photo">
+        <div class="avatar-wrap" onclick="openModal()" title="เปลี่ยนรูปโปรไฟล์ของคุณ">
           {% if profile_photo %}
             <img id="avatar-img" src="{{ profile_photo }}" alt="Profile" />
           {% else %}
@@ -588,12 +588,12 @@
         </div>
 
         <div style="width:100%">
-          <div class="info-label">Student Id</div>
+          <div class="info-label">รหัสนิสิต</div>
           <div class="info-box">{{ user.username }}</div>
         </div>
 
         <div style="width:100%">
-          <div class="info-label">Faculty</div>
+          <div class="info-label">คณะ</div>
           <div class="info-box">{{ user.profile.faculty|default:'—' }}</div>
         </div>
       </aside>
@@ -603,16 +603,16 @@
         <!-- Tabs -->
         <div class="tabs-wrap">
           <div class="tab-pill active" onclick="switchTab('problems', this)">
-            My<br />Problems
+            ปัญหา<br />ของฉัน
           </div>
           <div class="tab-pill" onclick="switchTab('purpose', this)">
-            My<br />Purpose
+            ข้อเสนอแนวทางแก้ปัญหา<br />ของฉัน
           </div>
         </div>
 
         <!-- MY PROBLEMS -->
         <div class="tab-content active" id="tab-problems">
-          <h2 class="section-title">My Problems</h2>
+          <h2 class="section-title">ปัญหาของฉัน</h2>
           <div class="divider"></div>
           <div class="problems-grid">
             <p style="color:red;">จำนวนปัญหา: {{ my_problems.count }}</p>
@@ -637,7 +637,7 @@
                     <div>
                       <div class="problem-name">{{ problem.title }}</div>
                       {% if problem.status == 'COMPLETED' %}
-                        <div class="status-completed">Completed</div>
+                        <div class="status-completed">เสร็จสมบูรณ์</div>
                       {% endif %}
                     </div>
                     <span title="{{ problem.description }}">ℹ️</span>
@@ -654,7 +654,7 @@
             <!-- Add problem card -->
             <div class="add-card" onclick="window.location='{% url 'define_problem' %}'">
               <div class="add-icon">+</div>
-              <span>Add Problem</span>
+              <span>เพิ่มปัญหาที่คุณเจอ</span>
             </div>
           </div>
         </div>
@@ -662,9 +662,9 @@
         <!-- MY PURPOSE -->
         <div class="tab-content" id="tab-purpose">
           <div class="purpose-header">
-            <h2 class="section-title" style="text-align:left;">My Purpose</h2>
+            <h2 class="section-title" style="text-align:left;">ข้อเสนอแนวทางแก้ปัญหาของฉัน</h2>
             <div class="score-box">
-              <div class="score-label">My score</div>
+              <div class="score-label">คะแนนของฉัน</div>
               <div class="score-value">{{ score|default:'0' }} ⏱</div>
             </div>
           </div>
@@ -688,7 +688,7 @@
                 <div class="purpose-comment">{{ purpose.comment|default:'' }}</div>
               </div>
             {% empty %}
-              <p style="color:#a07000; font-size:0.95rem;">ยังไม่มี Purpose</p>
+              <p style="color:#a07000; font-size:0.95rem;">ยังไม่มีข้อเสนอแนวทางแก้ปัญหา</p>
             {% endfor %}
           </div>
         </div>
@@ -710,9 +710,9 @@
         </div>
 
         <div class="modal-right">
-          <div class="photo-drop-zone" onclick="document.getElementById('photo-file-input').click()">Select Photo</div>
+          <div class="photo-drop-zone" onclick="document.getElementById('photo-file-input').click()">กรุณาเลือกรูปที่จะอัปโหลด</div>
           <input type="file" id="photo-file-input" accept="image/*" onchange="previewPhoto(this)" />
-          <button class="modal-continue-btn" onclick="applyPhoto()">Continue</button>
+          <button class="modal-continue-btn" onclick="applyPhoto()">อัปโหลดรูป</button>
         </div>
       </div>
     </div>

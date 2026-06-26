@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Count, Q
-from .models import Problem, Comment, UserProfile
+from .models import Problem, Comment, CommentRating, UserProfile
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
@@ -95,6 +95,7 @@ def search(request):
     return render(request, "propose_solutions.html", {"problems": results, "query": q})
 
 
+@login_required(login_url="login")
 def propose_solution(request):
     problems = Problem.objects.filter(is_approved=True).order_by("-created_at")
 
@@ -247,7 +248,7 @@ def notify_admin_new_problem(problem):
     if not admin_email:
         return
     send_otp_email(
-        subject=f"[Viable Graph] มีปัญหาใหม่รออนุมัติ: {problem.title}",
+        subject=f"[CoSolvers] มีปัญหาใหม่รออนุมัติ: {problem.title}",
         message=(
             f"มีผู้ใช้รายงานปัญหาใหม่: {problem.title}\n"
             f"หมวดหมู่: {problem.get_category_display()}\n"
@@ -376,13 +377,21 @@ def add_comment(request, problem_id):
 def rate_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.method == "POST":
+        if comment.author == request.user:
+            messages.error(request, "คุณไม่สามารถให้คะแนนคอมเมนต์ของตัวเองได้")
+            return redirect(
+                "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
+            )
         try:
             rating = int(request.POST.get("rating", 0))
         except (TypeError, ValueError):
             rating = 0
         if 1 <= rating <= 5:
-            comment.rating = rating
-            comment.save()
+            CommentRating.objects.update_or_create(
+                comment=comment,
+                user=request.user,
+                defaults={"rating": rating},
+            )
     return redirect(
         "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
     )
@@ -406,6 +415,24 @@ def delete_comment(request, comment_id):
         problem_id = getattr(comment.problem, "id", None)
         comment.delete()
         return redirect("problem_detail_public", problem_id=problem_id)
+    return redirect(
+        "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
+    )
+
+
+@login_required(login_url="login")
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.author != request.user:
+        messages.error(request, "คุณไม่มีสิทธิ์แก้ไขคอมเมนต์นี้")
+        return redirect(
+            "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
+        )
+    if request.method == "POST":
+        text = request.POST.get("text", "").strip()
+        if text:
+            comment.text = text
+            comment.save()
     return redirect(
         "problem_detail_public", problem_id=getattr(comment.problem, "id", None)
     )

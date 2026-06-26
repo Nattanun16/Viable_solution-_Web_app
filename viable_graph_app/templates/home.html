@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viable Graph</title>
+    <title>CoSolvers</title>
     {% load static %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -465,17 +465,19 @@
 
     <!-- NAVBAR -->
     <nav class="navbar">
-        <a class="navbar-brand-text" href="/">Viable Graph</a>
+        <a class="navbar-brand-text" href="/">CoSolvers</a>
         <ul class="nav-links">
-            <li class="nav-item"><a href="/" class="active">Home</a></li>
+            <li class="nav-item"><a href="/" class="active">หน้าหลัก</a></li>
+            {% if user.is_authenticated %}
             <li class="nav-item">
-                <a href="#about-us" onclick="smoothScroll(event,'about-us')">Propose</a>
+                <a href="#about-us" onclick="smoothScroll(event,'about-us')">วัตถุประสงค์</a>
                 <div class="dropdown-menu-custom">
-                    <a href="#about-us" onclick="smoothScroll(event,'about-us')">about us</a>
-                    <a href="{% url 'propose_solution' %}">propose solution</a>
-                    <a href="{% url 'graph' %}">graph</a>
+                    <a href="#about-us" onclick="smoothScroll(event,'about-us')">เกี่ยวกับเรา</a>
+                    <a href="{% url 'propose_solution' %}">เสนอแนวทางแก้ปัญหา</a>
+                    <a href="{% url 'graph' %}">กราฟ</a>
                 </div>
             </li>
+            {% endif %}
 
             {% if user.is_authenticated %}
             <li class="nav-item">
@@ -486,9 +488,9 @@
                     </svg>
                 </a>
             </li>
-            <li class="nav-item"><a href="{% url 'logout' %}">Log Out</a></li>
+            <li class="nav-item"><a href="{% url 'logout' %}">ออกจากระบบ</a></li>
             {% else %}
-            <li class="nav-item"><a href="{% url 'login' %}">Log In</a></li>
+            <li class="nav-item"><a href="{% url 'login' %}">เข้าสู่ระบบ</a></li>
             {% endif %}
         </ul>
     </nav>
@@ -498,7 +500,7 @@
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1 class="hero-title">Viable Graph</h1>
+            <h1 class="hero-title">CoSolvers</h1>
             <div class="search-wrap">
                 {% if user.is_authenticated %}
                 <form method="get" action="{% url 'propose_solution' %}" class="search-box">
@@ -535,8 +537,8 @@
             <div class="row align-items-center g-5">
                 <div class="col-md-6">
                     <h2>About Us</h2>
-                    <p>Our web application provides a platform for Chulalongkorn University students to report problems
-                        occurring within the university and to propose effective solutions.</p>
+                    <p>เว็บแอปพลิเคชันของเราเป็นแพลตฟอร์มสำหรับนิสิตจุฬาลงกรณ์มหาวิทยาลัยใช้ในการแจ้งปัญหาที่เกิดขึ้น
+                        ภายในมหาวิทยาลัยและเสนอแนวทางการแก้ไขปัญหาที่มีประสิทธิภาพ</p>
 
                 </div>
             </div>
@@ -570,7 +572,7 @@
     </section>
 
     <footer>
-        © 2026 Viable Graph · CivicTech Web Application · พัฒนาด้วย Django &amp; Docker
+        © 2026 CoSolvers · CivicTech Web Application · พัฒนาด้วย Django &amp; Docker
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

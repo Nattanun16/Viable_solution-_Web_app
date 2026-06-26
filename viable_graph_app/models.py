@@ -59,6 +59,7 @@ class Problem(models.Model):
         if not self.tags:
             return []
         return [t.strip() for t in self.tags.split(",") if t.strip()]
+
     is_approved = models.BooleanField(default=False)
 
 
@@ -80,7 +81,6 @@ class Comment(models.Model):
     )
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
-    rating = models.IntegerField(default=0)  # 0-5 ดาว
     parent = models.ForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"
     )
@@ -89,3 +89,38 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author.username}: {self.text[:30]}"
+
+    @property
+    def rating(self):
+        """คะแนนดาวเฉลี่ยจากทุกคนที่ให้คะแนน comment นี้ (ปัดเป็นจำนวนเต็มสำหรับการแสดงดาว)"""
+        avg = self.star_ratings.aggregate(models.Avg("rating"))["rating__avg"]
+        return round(avg) if avg else 0
+
+    @property
+    def rating_average(self):
+        """คะแนนดาวเฉลี่ยแบบทศนิยม 1 ตำแหน่ง สำหรับแสดงผลตัวเลข"""
+        avg = self.star_ratings.aggregate(models.Avg("rating"))["rating__avg"]
+        return round(avg, 1) if avg else 0
+
+    @property
+    def rating_count(self):
+        return self.star_ratings.count()
+
+
+class CommentRating(models.Model):
+    """เก็บคะแนนดาวของผู้ใช้แต่ละคนที่ให้กับ comment (รองรับหลายคนให้คะแนนคนละค่า)"""
+
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name="star_ratings"
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("comment", "user")
+
+    def __str__(self):
+        return (
+            f"{self.user.username} ให้ {self.rating} ดาว กับ comment #{self.comment_id}"
+        )
