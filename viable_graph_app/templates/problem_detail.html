@@ -14,22 +14,18 @@
         padding: 0;
         box-sizing: border-box;
       }
-      
       body {
         font-family: 'Outfit', sans-serif;
         background: #ffb3d9;
         min-height: 100vh;
         color: #1a1a1a;
       }
-      
-      /* NAVBAR */
       .navbar {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 1rem 2.5rem;
       }
-      
       .navbar-brand {
         font-family: 'Bebas Neue', sans-serif;
         font-size: 2.2rem;
@@ -37,32 +33,25 @@
         letter-spacing: 0.06em;
         text-decoration: none;
       }
-      
       .nav-links {
         display: flex;
         gap: 2rem;
         list-style: none;
       }
-      
       .nav-links a {
         color: #1a1a1a;
         text-decoration: none;
         font-size: 1rem;
         font-weight: 500;
       }
-      
       .nav-links a:hover {
         text-decoration: underline;
         text-underline-offset: 4px;
       }
-      
-      /* TWO PANEL */
       .two-panel {
         display: flex;
         min-height: calc(100vh - 72px);
       }
-      
-      /* LEFT */
       .left-panel {
         flex: 1;
         background: #d8f0ff;
@@ -71,8 +60,6 @@
         position: relative;
         min-width: 0;
       }
-      
-      /* image slider */
       .slider-wrap {
         position: relative;
         width: 100%;
@@ -80,13 +67,11 @@
         overflow: hidden;
         background: linear-gradient(180deg, #b8e8ff 0%, #7dd87d 65%, #4a9a4a 100%);
       }
-      
       .slider-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-      
       .slider-btn {
         position: absolute;
         top: 50%;
@@ -104,7 +89,6 @@
         justify-content: center;
         transition: background 0.2s;
       }
-      
       .slider-btn:hover {
         background: rgba(255, 255, 255, 0.95);
       }
@@ -114,8 +98,6 @@
       .slider-btn.next {
         right: 0.75rem;
       }
-      
-      /* problem info box */
       .problem-info-box {
         margin: 0.8rem;
         background: rgba(220, 210, 255, 0.5);
@@ -126,20 +108,17 @@
         position: relative;
         min-height: 200px;
       }
-      
       .problem-info-title {
         font-size: 0.95rem;
         color: rgba(100, 80, 150, 0.6);
         font-weight: 500;
         margin-bottom: 0.5rem;
       }
-      
       .problem-info-desc {
         font-size: 0.9rem;
         color: rgba(80, 60, 120, 0.7);
         line-height: 1.6;
       }
-      
       .problem-meta {
         position: absolute;
         bottom: 0.8rem;
@@ -149,7 +128,6 @@
         gap: 0.6rem;
         flex-wrap: wrap;
       }
-      
       .meta-tag {
         background: #00bcd4;
         color: white;
@@ -158,15 +136,6 @@
         font-size: 0.78rem;
         font-weight: 600;
       }
-      
-      .meta-location {
-        font-size: 0.82rem;
-        color: rgba(80, 60, 120, 0.7);
-        display: flex;
-        align-items: center;
-        gap: 0.2rem;
-      }
-      
       .completed-overlay {
         position: absolute;
         bottom: 0.6rem;
@@ -184,14 +153,12 @@
         font-weight: 700;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
       }
-      
       .problem-actions {
         display: flex;
         gap: 0.6rem;
         margin: 0.8rem 0.8rem 0;
         align-items: center;
       }
-      
       .btn-edit,
       .btn-delete {
         padding: 0.5rem 1rem;
@@ -207,30 +174,24 @@
         align-items: center;
         gap: 0.3rem;
       }
-      
       .btn-edit {
         background: #00bcd4;
         color: white;
       }
-      
       .btn-edit:hover {
         background: #00a9c4;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
       }
-      
       .btn-delete {
         background: #ff4081;
         color: white;
       }
-      
       .btn-delete:hover {
         background: #f50057;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
       }
-      
-      /* RIGHT */
       .right-panel {
         width: 55%;
         min-width: 400px;
@@ -238,28 +199,23 @@
         display: flex;
         flex-direction: column;
       }
-      
       .comment-header {
         display: flex;
         align-items: baseline;
         justify-content: space-between;
         padding: 1rem 1.5rem 0.6rem;
       }
-      
       .comment-date {
         font-size: 0.88rem;
         color: #7a90b0;
         font-weight: 500;
       }
-      
       .comment-title {
         font-family: 'Bebas Neue', sans-serif;
         font-size: 2rem;
         color: #1a1a1a;
         letter-spacing: 0.05em;
       }
-      
-      /* comments list */
       .comments-list {
         flex: 1;
         overflow-y: auto;
@@ -268,14 +224,11 @@
         flex-direction: column;
         gap: 0.75rem;
       }
-      
-      /* single comment */
       .comment-item {
         display: flex;
         gap: 0.6rem;
         align-items: flex-start;
       }
-      
       .comment-avatar {
         width: 2.2rem;
         height: 2.2rem;
@@ -288,23 +241,19 @@
         background: #f0f0f0;
         overflow: hidden;
       }
-      
       .comment-avatar svg {
         width: 70%;
         height: 70%;
       }
-      
       .comment-main {
         flex: 1;
       }
-      
       .comment-username {
         font-size: 0.82rem;
         font-weight: 600;
         color: #1a1a1a;
         margin-bottom: 0.25rem;
       }
-      
       .comment-bubble {
         background: rgba(220, 215, 255, 0.55);
         border-radius: 12px;
@@ -314,12 +263,10 @@
         min-height: 60px;
         line-height: 1.5;
       }
-      
       .comment-bubble.mine {
         background: rgba(255, 240, 200, 0.7);
         text-align: left;
       }
-      
       .comment-actions {
         display: flex;
         align-items: center;
@@ -327,7 +274,6 @@
         margin-top: 0.35rem;
         flex-wrap: wrap;
       }
-      
       .action-btn {
         background: none;
         border: none;
@@ -340,43 +286,36 @@
         align-items: center;
         gap: 0.2rem;
       }
-      
       .action-btn:hover {
         color: #d4007a;
       }
-      
       .action-divider {
         width: 1px;
         height: 14px;
         background: rgba(150, 120, 180, 0.3);
       }
-      
       .stars-display {
         margin-left: auto;
         display: flex;
         gap: 0.1rem;
+        align-items: center;
       }
-      
       .star {
         font-size: 1rem;
         cursor: pointer;
         color: #ccc;
         transition: color 0.15s;
       }
-      
       .star.filled {
         color: #f0a000;
       }
       .star:hover {
         color: #f0a000;
       }
-      
-      /* reply indent */
       .reply-indent {
         padding-left: 2rem;
         position: relative;
       }
-      
       .reply-indent::before {
         content: '';
         position: absolute;
@@ -388,8 +327,6 @@
         border-radius: 2px;
         opacity: 0.4;
       }
-      
-      /* reply box (inline) */
       .reply-box {
         display: none;
         margin-top: 0.5rem;
@@ -397,11 +334,9 @@
         border-radius: 10px;
         padding: 0.5rem 0.75rem;
       }
-      
       .reply-box.open {
         display: block;
       }
-      
       .reply-input {
         width: 100%;
         border: none;
@@ -413,7 +348,6 @@
         resize: none;
         min-height: 40px;
       }
-      
       .reply-submit {
         background: #d4007a;
         color: white;
@@ -425,15 +359,12 @@
         float: right;
         margin-top: 0.3rem;
       }
-      
-      /* comment input bar */
       .comment-input-wrap {
         padding: 0.75rem 1.2rem 1rem;
         display: flex;
         align-items: center;
         gap: 0.6rem;
       }
-      
       .comment-input {
         flex: 1;
         padding: 0.75rem 1.2rem;
@@ -445,11 +376,9 @@
         color: #1a1a1a;
         outline: none;
       }
-      
       .comment-input::placeholder {
         color: rgba(60, 30, 50, 0.38);
       }
-      
       .comment-submit {
         width: 2.6rem;
         height: 2.6rem;
@@ -465,12 +394,9 @@
         transition: background 0.2s;
         flex-shrink: 0;
       }
-      
       .comment-submit:hover {
         background: #d4007a;
       }
-      
-      /* RATING MODAL */
       .modal-overlay {
         display: none;
         position: fixed;
@@ -480,11 +406,9 @@
         align-items: center;
         justify-content: center;
       }
-      
       .modal-overlay.open {
         display: flex;
       }
-      
       .modal-box {
         background: #ffffff;
         border-radius: 20px;
@@ -495,7 +419,6 @@
         animation: popIn 0.2s ease both;
         min-width: 340px;
       }
-      
       @keyframes popIn {
         from {
           opacity: 0;
@@ -506,7 +429,6 @@
           transform: scale(1);
         }
       }
-      
       .modal-close {
         position: absolute;
         top: 0.8rem;
@@ -517,27 +439,23 @@
         border: none;
         color: #555;
       }
-      
       .modal-title {
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 1.2rem;
         color: #1a1a1a;
       }
-      
       .modal-stars {
         display: flex;
         justify-content: center;
         gap: 0.5rem;
       }
-      
       .modal-star {
         font-size: 2.5rem;
         cursor: pointer;
         color: #ddd;
         transition: color 0.15s, transform 0.15s;
       }
-      
       .modal-star:hover,
       .modal-star.active {
         color: #f0a000;
@@ -546,7 +464,6 @@
     </style>
   </head>
   <body>
-    <!-- NAVBAR -->
     <nav class="navbar">
       <a class="navbar-brand" href="{% url 'home' %}">CoSolvers</a>
       <ul class="nav-links">
@@ -572,7 +489,6 @@
     </nav>
 
     <div class="two-panel">
-      <!-- LEFT: Problem info -->
       <div class="left-panel">
         <div class="slider-wrap">
           {% if problem.photo %}
@@ -593,32 +509,30 @@
         <div class="problem-info-box">
           <div class="problem-info-title">{{ problem.title }}</div>
           <div class="problem-info-desc">{{ problem.description|default:'' }}</div>
-
-          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(180, 180, 220, 0.3); font-size: 0.9rem;">
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(180,180,220,0.3);font-size:0.9rem;">
             {% if problem.category %}
-              <div style="margin-bottom: 0.6rem;">
-                <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📁 ประเภทปัญหา:</span>
-                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.get_category_display }}</span>
+              <div style="margin-bottom:0.6rem;">
+                <span style="color:rgba(100,80,150,0.6);font-weight:600;">📁 ประเภทปัญหา:</span>
+                <span style="color:rgba(80,60,120,0.7);">{{ problem.get_category_display }}</span>
               </div>
             {% endif %}
             {% if problem.location %}
-              <div style="margin-bottom: 0.6rem;">
-                <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📍 สถานที่:</span>
-                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.location }}</span>
+              <div style="margin-bottom:0.6rem;">
+                <span style="color:rgba(100,80,150,0.6);font-weight:600;">📍 สถานที่:</span>
+                <span style="color:rgba(80,60,120,0.7);">{{ problem.location }}</span>
               </div>
             {% endif %}
             {% if problem.incident_date %}
-              <div style="margin-bottom: 0.6rem;">
-                <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">📅 วันที่เกิดเหตุ:</span>
-                <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.incident_date|date:'d/m/Y' }}</span>
+              <div style="margin-bottom:0.6rem;">
+                <span style="color:rgba(100,80,150,0.6);font-weight:600;">📅 วันที่เกิดเหตุ:</span>
+                <span style="color:rgba(80,60,120,0.7);">{{ problem.incident_date|date:'d/m/Y' }}</span>
               </div>
             {% endif %}
-            <div style="margin-bottom: 0.6rem;">
-              <span style="color: rgba(100, 80, 150, 0.6); font-weight: 600;">⏱️ วันที่สร้าง:</span>
-              <span style="color: rgba(80, 60, 120, 0.7);">{{ problem.created_at|date:'d/m/Y H:i' }}</span>
+            <div style="margin-bottom:0.6rem;">
+              <span style="color:rgba(100,80,150,0.6);font-weight:600;">⏱️ วันที่สร้าง:</span>
+              <span style="color:rgba(80,60,120,0.7);">{{ problem.created_at|date:'d/m/Y H:i' }}</span>
             </div>
           </div>
-
           <div class="problem-meta">
             {% if problem.tags %}
               {% for tag in problem.tags.split %}
@@ -626,7 +540,6 @@
               {% endfor %}
             {% endif %}
           </div>
-
           {% if problem.status == 'COMPLETED' %}
             <div class="completed-overlay">✓</div>
           {% endif %}
@@ -643,7 +556,6 @@
         {% endif %}
       </div>
 
-      <!-- RIGHT: Comments -->
       <div class="right-panel">
         <div class="comment-header">
           <span class="comment-date">{{ problem.created_at|date:'d/m/y' }}</span>
@@ -664,7 +576,6 @@
                 <div class="comment-username">{{ comment.author.username }}</div>
                 <div class="comment-bubble {% if comment.author == user %}mine{% endif %}" id="comment-text-{{ comment.id }}">{{ comment.text }}</div>
 
-                <!-- Edit box (hidden by default) -->
                 {% if comment.author == user %}
                   <div class="reply-box" id="edit-{{ comment.id }}">
                     <form method="post" action="{% url 'edit_comment' comment.id %}">
@@ -679,7 +590,6 @@
                 <div class="comment-actions">
                   <button class="action-btn" onclick="toggleReply('reply-{{ comment.id }}')">ตอบกลับความคิดเห็น ▾</button>
                   <div class="action-divider"></div>
-
                   {% if comment.author == user %}
                     <button class="action-btn" onclick="toggleReply('edit-{{ comment.id }}')">แก้ไขความคิดเห็น</button>
                     <div class="action-divider"></div>
@@ -689,30 +599,24 @@
                       <button class="action-btn" type="submit" title="รายงาน">👎</button>
                     </form>
                   {% endif %}
-                  <div class="stars-display"
-                    title="{% if comment.rating_count > 0 %}
-                      
-                      คะแนนเฉลี่ย {{ comment.rating_average }} จาก {{ comment.rating_count }} คน
 
-                    {% else %}
-                      
-                      ยังไม่มีคนให้คะแนน
-
-                    {% endif %}">
-                    {% for i in stars %}
-                      {% if comment.author == user %}
-                        <span class="star {% if forloop.counter <= comment.rating %}filled{% endif %}" style="cursor:default; opacity:0.5;">★</span>
+                  {% if comment.author != user %}
+                    <div class="stars-display"
+                      title="{% if comment.rating_count > 0 %}
+                        คะแนนเฉลี่ย {{ comment.rating_average }} จาก {{ comment.rating_count }} คน
                       {% else %}
+                        ยังไม่มีคนให้คะแนน
+                      {% endif %}">
+                      {% for i in stars %}
                         <span class="star {% if forloop.counter <= comment.rating %}filled{% endif %}" onclick="openRating({{ comment.id }})">★</span>
+                      {% endfor %}
+                      {% if comment.rating_count > 0 %}
+                        <span style="font-size:0.75rem;color:rgba(80,60,120,0.6);margin-left:0.3rem;">({{ comment.rating_average }})</span>
                       {% endif %}
-                    {% endfor %}
-                    {% if comment.rating_count > 0 %}
-                      <span style="font-size:0.75rem; color:rgba(80,60,120,0.6); margin-left:0.3rem;">({{ comment.rating_average }})</span>
-                    {% endif %}
-                  </div>
+                    </div>
+                  {% endif %}
                 </div>
 
-                <!-- Reply box -->
                 <div class="reply-box" id="reply-{{ comment.id }}">
                   <form method="post" action="{% url 'add_comment' problem.id %}">
                     {% csrf_token %}
@@ -723,7 +627,6 @@
                   </form>
                 </div>
 
-                <!-- Replies -->
                 {% for reply in comment.replies.all %}
                   <div class="reply-indent" style="margin-top:0.5rem;">
                     <div class="comment-item">
@@ -763,27 +666,22 @@
                               <button class="action-btn" type="submit" title="รายงาน">👎</button>
                             </form>
                           {% endif %}
-                          <div class="stars-display"
-                            title="{% if reply.rating_count > 0 %}
-                              
-                              คะแนนเฉลี่ย {{ reply.rating_average }} จาก {{ reply.rating_count }} คน
 
-                            {% else %}
-                              
-                              ยังไม่มีคนให้คะแนน
-
-                            {% endif %}">
-                            {% for i in stars %}
-                              {% if reply.author == user %}
-                                <span class="star {% if forloop.counter <= reply.rating %}filled{% endif %}" style="cursor:default; opacity:0.5;">★</span>
+                          {% if reply.author != user %}
+                            <div class="stars-display"
+                              title="{% if reply.rating_count > 0 %}
+                                คะแนนเฉลี่ย {{ reply.rating_average }} จาก {{ reply.rating_count }} คน
                               {% else %}
+                                ยังไม่มีคนให้คะแนน
+                              {% endif %}">
+                              {% for i in stars %}
                                 <span class="star {% if forloop.counter <= reply.rating %}filled{% endif %}" onclick="openRating({{ reply.id }})">★</span>
+                              {% endfor %}
+                              {% if reply.rating_count > 0 %}
+                                <span style="font-size:0.75rem;color:rgba(80,60,120,0.6);margin-left:0.3rem;">({{ reply.rating_average }})</span>
                               {% endif %}
-                            {% endfor %}
-                            {% if reply.rating_count > 0 %}
-                              <span style="font-size:0.75rem; color:rgba(80,60,120,0.6); margin-left:0.3rem;">({{ reply.rating_average }})</span>
-                            {% endif %}
-                          </div>
+                            </div>
+                          {% endif %}
                         </div>
                       </div>
                     </div>
@@ -792,11 +690,10 @@
               </div>
             </div>
           {% empty %}
-            <p style="color:rgba(150,100,130,0.6); font-size:0.9rem; text-align:center; margin-top:2rem;">ยังไม่มีความคิดเห็น เป็นคนแรกที่แสดงความคิดเห็น!</p>
+            <p style="color:rgba(150,100,130,0.6);font-size:0.9rem;text-align:center;margin-top:2rem;">ยังไม่มีความคิดเห็น เป็นคนแรกที่แสดงความคิดเห็น!</p>
           {% endfor %}
         </div>
 
-        <!-- Input bar -->
         {% if user.is_authenticated %}
           <form method="post" action="{% url 'add_comment' problem.id %}" class="comment-input-wrap">
             {% csrf_token %}
@@ -805,13 +702,12 @@
           </form>
         {% else %}
           <div class="comment-input-wrap">
-            <a href="{% url 'login' %}" style="color:#d4007a; font-size:0.9rem; font-weight:600;">ล็อกอินเพื่อแสดงความคิดเห็น</a>
+            <a href="{% url 'login' %}" style="color:#d4007a;font-size:0.9rem;font-weight:600;">ล็อกอินเพื่อแสดงความคิดเห็น</a>
           </div>
         {% endif %}
       </div>
     </div>
 
-    <!-- RATING MODAL -->
     <div class="modal-overlay" id="rating-modal">
       <div class="modal-box">
         <button class="modal-close" onclick="closeRating()">✕</button>
@@ -829,39 +725,35 @@
     </div>
 
     <script>
-        function toggleReply(id) {
-            const box = document.getElementById(id);
-            box.classList.toggle('open');
-        }
-
-        function openRating(commentId) {
-            {% if not user.is_authenticated %}
-                window.location = "{% url 'login' %}";
-                return;
-            {% endif %}
-            document.getElementById('rating-form').action = '/comment/' + commentId + '/rate/';
-            document.getElementById('rating-value').value = 0;
-            document.querySelectorAll('.modal-star').forEach(s => s.classList.remove('active'));
-            document.getElementById('rating-modal').classList.add('open');
-        }
-
-        function closeRating() {
-            document.getElementById('rating-modal').classList.remove('open');
-        }
-
-        function setRating(val) {
-            document.getElementById('rating-value').value = val;
-            document.querySelectorAll('.modal-star').forEach((s, i) => {
-                s.classList.toggle('active', i < val);
-            });
-            setTimeout(() => {
-                document.getElementById('rating-form').submit();
-            }, 400);
-        }
-
-        document.getElementById('rating-modal').addEventListener('click', function(e) {
-            if (e.target === this) closeRating();
+      function toggleReply(id) {
+        const box = document.getElementById(id);
+        box.classList.toggle('open');
+      }
+      function openRating(commentId) {
+        {% if not user.is_authenticated %}
+          window.location = "{% url 'login' %}";
+          return;
+        {% endif %}
+        document.getElementById('rating-form').action = '/comment/' + commentId + '/rate/';
+        document.getElementById('rating-value').value = 0;
+        document.querySelectorAll('.modal-star').forEach(s => s.classList.remove('active'));
+        document.getElementById('rating-modal').classList.add('open');
+      }
+      function closeRating() {
+        document.getElementById('rating-modal').classList.remove('open');
+      }
+      function setRating(val) {
+        document.getElementById('rating-value').value = val;
+        document.querySelectorAll('.modal-star').forEach((s, i) => {
+          s.classList.toggle('active', i < val);
         });
+        setTimeout(() => {
+          document.getElementById('rating-form').submit();
+        }, 400);
+      }
+      document.getElementById('rating-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeRating();
+      });
     </script>
   </body>
 </html>
