@@ -591,7 +591,7 @@
         </div>
 
         <div class="problem-info-box">
-          <div class="problem-info-title">ปัญหาของคุณ</div>
+          <div class="problem-info-title">{{ problem.title }}</div>
           <div class="problem-info-desc">{{ problem.description|default:'' }}</div>
 
           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(180, 180, 220, 0.3); font-size: 0.9rem;">
@@ -681,12 +681,7 @@
                   <div class="action-divider"></div>
 
                   {% if comment.author == user %}
-                    <button class="action-btn" onclick="toggleReply('edit-{{ comment.id }}')">✏️ แก้ไข</button>
-                    <div class="action-divider"></div>
-                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
-                      {% csrf_token %}
-                      <button class="action-btn" type="submit">🗑️</button>
-                    </form>
+                    <button class="action-btn" onclick="toggleReply('edit-{{ comment.id }}')">แก้ไขความคิดเห็น</button>
                     <div class="action-divider"></div>
                   {% else %}
                     <form method="post" action="{% url 'report_comment' comment.id %}" style="display:inline;">
@@ -696,9 +691,13 @@
                   {% endif %}
                   <div class="stars-display"
                     title="{% if comment.rating_count > 0 %}
+                      
                       คะแนนเฉลี่ย {{ comment.rating_average }} จาก {{ comment.rating_count }} คน
+
                     {% else %}
+                      
                       ยังไม่มีคนให้คะแนน
+
                     {% endif %}">
                     {% for i in stars %}
                       {% if comment.author == user %}
@@ -766,9 +765,13 @@
                           {% endif %}
                           <div class="stars-display"
                             title="{% if reply.rating_count > 0 %}
+                              
                               คะแนนเฉลี่ย {{ reply.rating_average }} จาก {{ reply.rating_count }} คน
+
                             {% else %}
+                              
                               ยังไม่มีคนให้คะแนน
+
                             {% endif %}">
                             {% for i in stars %}
                               {% if reply.author == user %}
@@ -797,7 +800,7 @@
         {% if user.is_authenticated %}
           <form method="post" action="{% url 'add_comment' problem.id %}" class="comment-input-wrap">
             {% csrf_token %}
-            <input class="comment-input" type="text" name="text" placeholder="your comment" required />
+            <input class="comment-input" type="text" name="text" placeholder="แสดงความคิดเห็นของคุณ" required />
             <button class="comment-submit" type="submit">↑</button>
           </form>
         {% else %}
@@ -812,7 +815,7 @@
     <div class="modal-overlay" id="rating-modal">
       <div class="modal-box">
         <button class="modal-close" onclick="closeRating()">✕</button>
-        <div class="modal-title">What do you think?</div>
+        <div class="modal-title">คุณคิดเห็นอย่างไรกับแนวทางแก้ไขปัญหานี้?</div>
         <form method="post" id="rating-form" action="">
           {% csrf_token %}
           <input type="hidden" name="rating" id="rating-value" value="0" />
