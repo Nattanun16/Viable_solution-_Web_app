@@ -1,7 +1,7 @@
 """
 clustering.py — จัดกลุ่มวิธีแก้ปัญหาที่มีความหมายคล้ายกันเข้าด้วยกัน
 
-ใช้ Groq API (llama-3.3-70b-versatile)
+ใช้ Google Gemini 2.5 Flash-Lite (ฟรี 1,000 req/วัน)
 """
 
 from __future__ import annotations
@@ -14,8 +14,8 @@ import time
 if TYPE_CHECKING:
     from viable_graph_app.models import Comment
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
-GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent"
 
 
 def cluster_comments(comments: list) -> list[dict]:
@@ -23,78 +23,82 @@ def cluster_comments(comments: list) -> list[dict]:
         return []
     if len(comments) == 1:
         return [_make_group_dict([comments[0]])]
-    if not GROQ_API_KEY:
-        print("[clustering] GROQ_API_KEY not set -- skipping clustering")
+    if not GEMINI_API_KEY:
+        print("[clustering] GEMINI_API_KEY not set -- skipping clustering")
         return [_make_group_dict([c]) for c in comments]
 
     for attempt in range(3):
         try:
-            groups_raw = _call_groq(comments)
-            print(f"[clustering] Groq returned groups: {groups_raw}")
+            groups_raw = _call_gemini(comments)
+            print(f"[clustering] Gemini returned groups: {groups_raw}")
             return _build_result(comments, groups_raw)
         except Exception as e:
-            if "429" in str(e):
+            if "429" in str(e) or "quota" in str(e).lower():
                 wait = 5 * (attempt + 1)
-                print(f"[clustering] 429 rate limit -- waiting {wait}s (attempt {attempt+1}/3)")
+                print(f"[clustering] rate limit -- waiting {wait}s (attempt {attempt+1}/3)")
                 time.sleep(wait)
             else:
-                print(f"[clustering] Groq error: {e} -- falling back to no-grouping")
+                print(f"[clustering] Gemini error: {e} -- falling back to no-grouping")
                 break
 
     return [_make_group_dict([c]) for c in comments]
 
 
-def _call_groq(comments: list) -> list[list[int]]:
+def _call_gemini(comments: list) -> list[list[int]]:
+    n = len(comments)
     numbered = "\n".join(
         f"{i}. {c.text}" for i, c in enumerate(comments)
     )
+    valid_indices = list(range(n))
 
-    # ใช้ .format() แทน f-string เพื่อหลีกเลี่ยง {} ใน prompt ชน f-string
     prompt = (
-        "คุณคือผู้ช่วยจัดหมวดหมู่ความคิดเห็นภาษาไทย\n\n"
-        "ด้านล่างนี้คือรายการวิธีแก้ปัญหาที่ผู้ใช้เสนอ (แต่ละบรรทัดมีหมายเลขนำหน้า):\n"
-        + numbered +
-        "\n\nงาน: จัดกลุ่มวิธีแก้ที่มีความหมายเหมือนกันหรือคล้ายกันมากเข้าด้วยกัน\n"
-        "     แม้จะใช้คำต่างกัน เช่น 'เพิ่มเที่ยวรถป๊อป' กับ 'อยากให้รถโดยสารในมหาลัยวิ่งบ่อยขึ้น' ถือว่าเป็นกลุ่มเดียวกัน\n"
-        "     ถ้าวิธีแก้สองอันพูดถึงสิ่งเดียวกันหรือแก้ปัญหาเดียวกัน ให้รวมกลุ่มเสมอ แม้จะใช้ภาษาต่างกัน\n\n"
-        "กฎเหล็ก:\n"
-        "- ตอบด้วย JSON object ที่มี key ชื่อ 'groups' เท่านั้น\n"
-        "- รูปแบบ: {\"groups\": [[0,2],[1],[3,4]]}\n"
-        "- แต่ละ sub-array คือกลุ่มหนึ่ง ตัวเลขคือ index ของวิธีแก้\n"
-        "- ทุก index ต้องปรากฏใน output ครบ ไม่มีซ้ำ\n"
-        "- ถ้าไม่มีอันไหนคล้ายกันเลย ให้แต่ละอันเป็นกลุ่มของตัวเอง"
+        f"มีวิธีแก้ปัญหาทั้งหมด {n} รายการ (index 0 ถึง {n-1}):\n"
+        + numbered
+        + "\n\n"
+        "รวมกลุ่มเฉพาะวิธีแก้ที่ใช้ **วิธีการเดียวกัน** เท่านั้น\n"
+        "ตัวอย่างที่ **ควร** รวมกลุ่ม: 'เพิ่มท่อระบายน้ำ' กับ 'ต้องการท่อระบายน้ำมากกว่านี้' (วิธีเดียวกัน ต่างแค่คำ)\n"
+        "ตัวอย่างที่ **ไม่ควร** รวมกลุ่ม: 'เพิ่มท่อระบายน้ำ' กับ 'ขุดลอกท่อที่อุดตัน' (คนละวิธี แม้จะเกี่ยวกับท่อเหมือนกัน)\n"
+        "ตัวอย่างที่ **ไม่ควร** รวมกลุ่ม: 'ลดการเผาขยะ' กับ 'ใช้รถสาธารณะ' (คนละเรื่องกัน)\n"
+        "ถ้าไม่แน่ใจ ให้แยกกลุ่มดีกว่ารวมกลุ่มผิด\n\n"
+        f"กฎ:\n"
+        f"- index ที่ใช้ได้มีเฉพาะ: {valid_indices} เท่านั้น ห้ามใช้ตัวเลขอื่น\n"
+        f"- output ต้องมี index ครบทุกตัวจาก 0 ถึง {n-1} ไม่มีซ้ำ ไม่มีขาด\n"
+        "- ตอบด้วย JSON เท่านั้น ไม่ต้องมีคำอธิบาย รูปแบบ: {\"groups\": [[0,2],[1],[3]]}"
     )
 
     resp = requests.post(
-        GROQ_URL,
-        headers={
-            "Authorization": f"Bearer {GROQ_API_KEY}",
-            "Content-Type": "application/json",
-        },
+        f"{GEMINI_URL}?key={GEMINI_API_KEY}",
+        headers={"Content-Type": "application/json"},
         json={
-            "model": "llama-3.3-70b-versatile",
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0,
-            "response_format": {"type": "json_object"},
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "temperature": 0,
+                "maxOutputTokens": 512,
+                "responseMimeType": "application/json",
+            },
         },
         timeout=30,
     )
     resp.raise_for_status()
 
-    raw = resp.json()["choices"][0]["message"]["content"].strip()
-    print(f"[clustering] Raw Groq response: {repr(raw)}")
+    raw = resp.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
+    print(f"[clustering] Raw Gemini response: {repr(raw)}")
+
+    # strip markdown code fences if present
+    if raw.startswith("```"):
+        raw = raw.split("```")[1]
+        if raw.startswith("json"):
+            raw = raw[4:]
+    raw = raw.strip()
 
     parsed = json.loads(raw)
 
-    # Groq json_object mode จะ wrap ใน dict เสมอ เช่น {"groups": [[0,1]]}
-    if isinstance(parsed, dict):
-        for v in parsed.values():
-            if isinstance(v, list):
-                parsed = v
-                break
-
-    groups_raw: list[list[int]] = parsed
-    return groups_raw
+    if isinstance(parsed, dict) and "groups" in parsed:
+        return parsed["groups"]
+    elif isinstance(parsed, list):
+        return parsed
+    else:
+        raise ValueError(f"Unexpected Gemini response format: {parsed}")
 
 
 def _build_result(comments: list, groups_raw: list[list[int]]) -> list[dict]:
