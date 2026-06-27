@@ -44,6 +44,11 @@ urlpatterns = [
     path("api/solutions/", views.solution_chart_data, name="solution_chart_data"),
     path("api/problems-ranked/", views.problems_ranked, name="problems_ranked"),
     path(
+        "api/problems-by-category/",
+        views.problems_by_category,
+        name="problems_by_category",
+    ),
+    path(
         "api/problem-solutions/",
         views.problem_solutions_data,
         name="problem_solutions_data",

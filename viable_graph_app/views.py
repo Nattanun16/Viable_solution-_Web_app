@@ -710,6 +710,34 @@ def problems_ranked(request):
     )
 
 
+def problems_by_category(request):
+    """ส่งรายชื่อปัญหาในหมวดหมู่ที่ระบุ (รับชื่อหมวดหมู่ภาษาไทย) พร้อมจำนวนวิธีแก้ (comment) ของแต่ละปัญหา"""
+    category_name = request.GET.get("category", "")
+
+    # แปลงชื่อภาษาไทยกลับเป็น key เช่นเดียวกับ solution_chart_data
+    category_map = {v: k for k, v in dict(Problem.CATEGORY_CHOICES).items()}
+    category_key = category_map.get(category_name, "")
+
+    problems = (
+        Problem.objects.filter(is_approved=True, category=category_key)
+        .annotate(comment_count=Count("comments"))
+        .order_by("-comment_count")
+    )
+
+    return JsonResponse(
+        {
+            "problems": [
+                {
+                    "id": getattr(p, "id", None),
+                    "title": p.title,
+                    "count": getattr(p, "comment_count", 0),
+                }
+                for p in problems
+            ]
+        }
+    )
+
+
 def problem_solutions_data(request):
     problem_id = request.GET.get("problem_id", "")
     try:
