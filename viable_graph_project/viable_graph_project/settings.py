@@ -76,16 +76,36 @@ WSGI_APPLICATION = "viable_graph_project.wsgi.application"
 
 
 # Database
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "postgres"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-        "HOST": os.getenv("POSTGRES_HOST", "dbs"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+# Railway PostgreSQL — ใช้ DATABASE_URL ถ้ามี ไม่งั้น fallback ไป individual env vars
+_database_url = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:MPtKGQHozlaJNosGmgpofSYYPfFTLDCG@viable-solution-db.railway.internal:5432/railway",
+)
+
+try:
+    import dj_database_url
+
+    DATABASES = {
+        "default": cast(
+            Dict[str, Any],
+            dj_database_url.parse(_database_url, conn_max_age=600),
+        )
     }
-}
+except Exception:
+    # fallback: parse URL manually
+    import urllib.parse as _urlparse
+
+    _u = _urlparse.urlparse(_database_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": _u.path.lstrip("/"),
+            "USER": _u.username,
+            "PASSWORD": _u.password,
+            "HOST": _u.hostname,
+            "PORT": str(_u.port or 5432),
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -119,23 +139,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # If running behind a proxy/load balancer (e.g., on Render/Fly/Heroku), honor X-Forwarded-Proto header.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-# Allow using DATABASE_URL env var for easier hosting integrations
-if os.getenv("DATABASE_URL"):
-    try:
-        import dj_database_url
-
-        # dj_database_url.parse returns a TypedDict (DBConfig) which Pyright
-        # sometimes flags as incompatible with the expected dict type used
-        # for Django's DATABASES. Cast to a generic Dict[str, Any] so the
-        # type-checker accepts the assignment while preserving runtime behavior.
-        DATABASES["default"] = cast(
-            Dict[str, Any],
-            dj_database_url.parse(os.environ["DATABASE_URL"], conn_max_age=600),
-        )
-    except Exception:
-        # If dj-database-url isn't installed or parsing fails, keep the existing DATABASES
-        pass
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
